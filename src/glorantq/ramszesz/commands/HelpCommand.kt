@@ -17,12 +17,7 @@ class HelpCommand : Command {
         get() = Permission.NONE
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
-        val embedBuilder: EmbedBuilder = EmbedBuilder()
-        embedBuilder.withColor(BotUtils.embedColor)
-        embedBuilder.withAuthorName("Command Help")
-        embedBuilder.withFooterText("Command ran by @${event.author.name}")
-        embedBuilder.withFooterIcon(event.author.avatarURL)
-        embedBuilder.withTimestamp(System.currentTimeMillis())
+        val embedBuilder: EmbedBuilder = BotUtils.embed("Command Help", event.author)
 
         if(args.isEmpty()) {
             Ramszesz.instance.commands

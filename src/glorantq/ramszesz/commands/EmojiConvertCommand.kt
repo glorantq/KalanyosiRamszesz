@@ -76,7 +76,7 @@ class EmojiConvertCommand : Command {
         }
 
         if(convertedMessage.length > 2000) {
-            event.channel.sendMessage("Sorry ${event.author.mention()}, but the converted message is more than 2000 characters!")
+            event.channel.sendMessage(BotUtils.createSimpleEmbed("Emoji Convert", "Sorry ${event.author.name}, but the converted message is more than 2000 characters!", event.author))
         } else {
             event.channel.sendMessage(convertedMessage)
         }

@@ -26,7 +26,7 @@ class Ramszesz private constructor() {
     }
 
     val logger: Logger = LoggerFactory.getLogger(Ramszesz::class.java)
-    val discord: IDiscordClient = BotUtils.buildDiscordClient("MzM4Mzc3NjkwMDAyNDg5MzQ0.DFVAug.2_GUFl0XcN627Zz-ImDisABSFpM")
+    val discord: IDiscordClient = BotUtils.buildDiscordClient("")
 
     val configs: ArrayList<ConfigFile> = ArrayList()
     val commands: ArrayList<Command> = ArrayList()
@@ -39,6 +39,14 @@ class Ramszesz private constructor() {
         commands.add(ConfigDumpCommand())
         commands.add(ConfigCommand())
         commands.add(LeaveCommand())
+        commands.add(AvatarCommand())
+        commands.add(JoinCommand())
+        commands.add(AssignRoleCommand())
+        commands.add(RemoveRoleCommand())
+        commands.add(KickCommand())
+        commands.add(BanCommand())
+        commands.add(PlayingTextCommand())
+        commands.add(DeleteCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()
@@ -66,21 +74,29 @@ class Ramszesz private constructor() {
     fun onMessageReceived(event: MessageReceivedEvent) {
         val message: String = event.message.formattedContent
 
-        if(message.startsWith(BotUtils.prefix, true)) {
+        if (message.startsWith(BotUtils.prefix, true)) {
             val parts: List<String> = message.split(" ")
-            val args: List<String> = if(parts.size == 1) { ArrayList() } else { parts.subList(1, parts.size) }
+            val args: List<String> = if (parts.size == 1) {
+                ArrayList()
+            } else {
+                parts.subList(1, parts.size)
+            }
 
             val commandBase: String = parts[0].replaceFirst(BotUtils.prefix, "", true)
 
-            for(command: Command in commands) {
-                if(command.commandName.equals(commandBase, true) || command.aliases.contains(commandBase.toLowerCase())) {
-                    if(getConfigForGuild(event.guild.stringID).deleteCommands) {
+            for (command: Command in commands) {
+                if (command.commandName.equals(commandBase, true) || command.aliases.contains(commandBase.toLowerCase())) {
+                    if (getConfigForGuild(event.guild.stringID).deleteCommands) {
                         event.message.delete()
                     }
-                    if(BotUtils.getPermissionLevel(event.author, event.guild).ordinal < command.permission.ordinal) {
-                        event.channel.sendMessage("I'm sorry ${event.author.mention()}, but you don't have permissions to run this command")
-                    } else {
+                    if (command.permission == Permission.BOT_OWNER && event.author.longID == 251374678688530433) {
                         command.execute(event, args)
+                    } else {
+                        if (BotUtils.getPermissionLevel(event.author, event.guild).ordinal < command.permission.ordinal) {
+                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Missing Permissions", "I'm sorry ${event.author.mention()}, but you don't have permissions to run this command", event.author))
+                        } else {
+                            command.execute(event, args)
+                        }
                     }
                     break
                 }

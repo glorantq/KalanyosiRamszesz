@@ -37,12 +37,12 @@ class ConfigCommand : Command {
                 when(args[0]) {
                     "emojiNameAppend" -> {
                         config.emojiNameAppend = args[1].equals("true", true)
-                        event.channel.sendMessage("The value of `emojiNameAppend` has been set to ${config.emojiNameAppend}")
+                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `emojiNameAppend` has been set to ${config.emojiNameAppend}", event.author))
                     }
 
                     "deleteCommands" -> {
                         config.deleteCommands = args[1].equals("true", true)
-                        event.channel.sendMessage("The value of `deleteCommands` has been set to ${config.deleteCommands}")
+                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `deleteCommands` has been set to ${config.deleteCommands}", event.author))
                     }
 
                     "adminRole" -> {
@@ -52,19 +52,19 @@ class ConfigCommand : Command {
                                 .forEach { roleName += "$it " }
                         roleName = roleName.trim()
 
-                        if(roleName.equals("-1", true)) {
+                        if(roleName.equals("owner", true)) {
                             config.adminRole = -1L
-                            event.channel.sendMessage("The value of `adminRole` has been set to Server Owner")
+                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `adminRole` has been set to Server Owner", event.author))
                             return
                         }
 
                         val roles: List<IRole> = event.guild.getRolesByName(roleName)
                         if(roles.isEmpty()) {
-                            event.channel.sendMessage("That role doesn't exist!")
+                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "That role doesn't exist!", event.author))
                         } else {
                             config.adminRole = roles[0].longID
                         }
-                        event.channel.sendMessage("The value of `adminRole` has been set to ${roles[0].name}")
+                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `adminRole` has been set to ${roles[0].name}", event.author))
                     }
 
                     "userRole" -> {
@@ -74,19 +74,19 @@ class ConfigCommand : Command {
                                 .forEach { roleName += "$it " }
                         roleName = roleName.trim()
 
-                        if(roleName.equals("-1", true)) {
+                        if(roleName.equals("everyone", true)) {
                             config.userRole = -1L
-                            event.channel.sendMessage("The value of `userRole` has been set to Everyone")
+                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `userRole` has been set to Everyone", event.author))
                             return
                         }
 
                         val roles: List<IRole> = event.guild.getRolesByName(roleName)
                         if(roles.isEmpty()) {
-                            event.channel.sendMessage("That role doesn't exist!")
+                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "That role doesn't exist!", event.author))
                         } else {
                             config.userRole = roles[0].longID
                         }
-                        event.channel.sendMessage("The value of `userRole` has been set to ${roles[0].name}")
+                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `userRole` has been set to ${roles[0].name}", event.author))
                     }
                 }
             }

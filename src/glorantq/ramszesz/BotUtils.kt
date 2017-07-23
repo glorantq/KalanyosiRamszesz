@@ -4,9 +4,11 @@ import glorantq.ramszesz.commands.Permission
 import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.api.ClientBuilder
 import sx.blah.discord.api.IDiscordClient
+import sx.blah.discord.api.internal.json.objects.EmbedObject
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.handle.obj.IUser
+import sx.blah.discord.util.EmbedBuilder
 
 /**
  * Created by glorantq on 2017. 07. 22..
@@ -72,6 +74,20 @@ class BotUtils {
             } else {
                 Permission.NONE
             }
+        }
+
+        fun createSimpleEmbed(header: String, content: String, author: IUser): EmbedObject {
+            return embed(header, author).withDescription(content).build()
+        }
+
+        fun embed(header: String, author: IUser): EmbedBuilder {
+            val builder: EmbedBuilder = EmbedBuilder()
+            builder.withColor(BotUtils.embedColor)
+            builder.withAuthorName(header)
+            builder.withFooterText("Command ran by @${author.name}")
+            builder.withFooterIcon(author.avatarURL)
+            builder.withTimestamp(System.currentTimeMillis())
+            return builder
         }
     }
 }

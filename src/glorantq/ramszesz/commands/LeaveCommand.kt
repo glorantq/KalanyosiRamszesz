@@ -1,5 +1,6 @@
 package glorantq.ramszesz.commands
 
+import glorantq.ramszesz.BotUtils
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 
 /**
@@ -14,6 +15,8 @@ class LeaveCommand : Command {
         get() = Permission.OWNER
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
-        event.channel.sendMessage("Goodbye!")
+        event.channel.sendMessage(BotUtils.createSimpleEmbed("Leave", "Goodbye!", event.author))
+        event.client.logout()
+        System.exit(2)
     }
 }

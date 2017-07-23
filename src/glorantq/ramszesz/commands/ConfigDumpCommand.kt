@@ -21,12 +21,7 @@ class ConfigDumpCommand : Command {
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val config: ConfigFile = BotUtils.getGuildConfig(event)
 
-        val embedBuilder: EmbedBuilder = EmbedBuilder()
-        embedBuilder.withColor(BotUtils.embedColor)
-        embedBuilder.withAuthorName("Config dump for ${event.guild.name}")
-        embedBuilder.withFooterText("Command ran by @${event.author.name}")
-        embedBuilder.withFooterIcon(event.author.avatarURL)
-        embedBuilder.withTimestamp(System.currentTimeMillis())
+        val embedBuilder: EmbedBuilder = BotUtils.embed("Config dump for ${event.guild.name}", event.author)
 
         embedBuilder.appendField("guildId", config.guildId, true)
         embedBuilder.appendField("emojiNameAppend", config.emojiNameAppend.toString(), true)
