@@ -66,6 +66,20 @@ class ConfigFile {
             save()
         }
 
+    @SerializedName("logModerations")
+    var logModerations: Boolean = false
+        set(value) {
+            field = value
+            save()
+        }
+
+    @SerializedName("modLogChannel")
+    var modLogChannel: Long = -1
+        set(value) {
+            field = value
+            save()
+        }
+
     private fun save() {
         val configFile: File = File("./config/$guildId.json")
         val json: String = Gson().toJson(this)

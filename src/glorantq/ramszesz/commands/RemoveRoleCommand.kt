@@ -1,6 +1,7 @@
 package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.BotUtils
+import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IRole
 import sx.blah.discord.handle.obj.IUser
@@ -60,6 +61,11 @@ class RemoveRoleCommand : Command {
             try {
                 mentions[0].removeRole(roles[0])
                 embed.withDescription("Successfully removed the `${roles[0].name}` role from ${mentions[0].mention()}")
+
+                val config: ConfigFile = BotUtils.getGuildConfig(event)
+                if(config.logModerations) {
+                    event.guild.getChannelByID(config.modLogChannel).sendMessage(embed.build())
+                }
             } catch (e: Exception) {
                 embed.withDescription("Failed to remove role!")
                 embed.appendField(e::class.simpleName, e.message, false)

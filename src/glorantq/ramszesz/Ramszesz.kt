@@ -47,6 +47,7 @@ class Ramszesz private constructor() {
         commands.add(BanCommand())
         commands.add(PlayingTextCommand())
         commands.add(DeleteCommand())
+        commands.add(UnshortenCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()

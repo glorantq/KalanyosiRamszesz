@@ -1,6 +1,7 @@
 package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.BotUtils
+import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.handle.obj.Permissions
@@ -52,6 +53,11 @@ class KickCommand: Command {
                 embed.withDescription("The user `@${mentions[0].name}` has been kicked from the server by ${event.author.mention()}")
             } else {
                 embed.withDescription("The user `@${mentions[0].name}` has been kicked from the server by ${event.author.mention()} for: `$reasonString`")
+            }
+
+            val config: ConfigFile = BotUtils.getGuildConfig(event)
+            if(config.logModerations) {
+                event.guild.getChannelByID(config.modLogChannel).sendMessage(embed.build())
             }
         } catch (e: Exception) {
             embed.withDescription("Failed to kick user!")

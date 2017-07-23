@@ -28,6 +28,8 @@ class ConfigDumpCommand : Command {
         embedBuilder.appendField("deleteCommands", config.deleteCommands.toString(), true)
         embedBuilder.appendField("userRole", if(config.userRole != -1L) {event.guild.getRoleByID(config.userRole).name} else {"Everyone"}, true)
         embedBuilder.appendField("adminRole", if(config.adminRole != -1L) {event.guild.getRoleByID(config.adminRole).name} else {"Server Owner"}, true)
+        embedBuilder.appendField("modLogChannel", if(config.modLogChannel != -1L) {event.guild.getChannelByID(config.modLogChannel).name} else {"None"}, true)
+        embedBuilder.appendField("logModerations", config.logModerations.toString(), true)
 
         event.channel.sendMessage(embedBuilder.build())
     }

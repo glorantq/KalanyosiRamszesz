@@ -1,7 +1,9 @@
 package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.BotUtils
+import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
 
@@ -20,8 +22,8 @@ class BanCommand : Command {
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val embed: EmbedBuilder = BotUtils.embed("Ban", event.author)
-        val canKick: Boolean = event.author.getPermissionsForGuild(event.guild).any { it.hasPermission(4) }
-        if(!canKick) {
+        val hasPerms: Boolean = event.author.getPermissionsForGuild(event.guild).any { it.hasPermission(4) }
+        if(!hasPerms) {
             embed.withDescription("You don't have permissions to ban users!")
             event.channel.sendMessage(embed.build())
             return
@@ -51,6 +53,11 @@ class BanCommand : Command {
                 embed.withDescription("The user `@${mentions[0].name}` has been banned from the server by ${event.author.mention()}")
             } else {
                 embed.withDescription("The user `@${mentions[0].name}` has been banned from the server by ${event.author.mention()} for: `$reasonString`")
+            }
+
+            val config: ConfigFile = BotUtils.getGuildConfig(event)
+            if(config.logModerations) {
+                event.guild.getChannelByID(config.modLogChannel).sendMessage(embed.build())
             }
         } catch (e: Exception) {
             embed.withDescription("Failed to ban user!")

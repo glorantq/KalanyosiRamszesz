@@ -3,6 +3,7 @@ package glorantq.ramszesz.commands
 import glorantq.ramszesz.BotUtils
 import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IRole
 import java.util.*
 
@@ -24,6 +25,8 @@ class ConfigCommand : Command {
         allowedKeys.add("deleteCommands")
         allowedKeys.add("userRole")
         allowedKeys.add("adminRole")
+        allowedKeys.add("logModerations")
+        allowedKeys.add("modLogChannel")
     }
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
@@ -87,6 +90,35 @@ class ConfigCommand : Command {
                             config.userRole = roles[0].longID
                         }
                         event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `userRole` has been set to ${roles[0].name}", event.author))
+                    }
+
+                    "logModerations" -> {
+                        if(config.modLogChannel == -1L) {
+                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "You need to set `modLogChannel` before setting `logModerations`", event.author))
+                            return
+                        }
+
+                        config.logModerations = args[1].equals("true", true)
+                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `logModerations` has been set to ${config.logModerations}", event.author))
+                    }
+
+                    "modLogChannel" -> {
+                        if(args[1].equals("none", true)) {
+                            config.logModerations = false
+                            config.modLogChannel = -1L
+
+                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `modLogChannel` has been set to none and logging was disabled", event.author))
+                            return
+                        }
+
+                        val channels: List<IChannel> = event.guild.getChannelsByName(args[1])
+                        if(channels.isEmpty()) {
+                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "Couldn't find that channel!", event.author))
+                        } else {
+                            config.modLogChannel = channels[0].longID
+                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `modLogChannel` has been set to ${channels[0].name}", event.author))
+                            channels[0].sendMessage(BotUtils.createSimpleEmbed("Moderation Logging", "Moderation logging has been bound to this channel", event.author))
+                        }
                     }
                 }
             }

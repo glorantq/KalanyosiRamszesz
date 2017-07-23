@@ -1,8 +1,10 @@
 package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.BotUtils
+import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IMessage
+import sx.blah.discord.handle.obj.IUser
 
 /**
  * Created by glora on 2017. 07. 23..
@@ -20,27 +22,97 @@ class DeleteCommand : Command {
         get() = listOf("purge")
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
-        if(event.message.mentions.isEmpty()) {
-            if(args.isEmpty()) {
+        val hasPerms: Boolean = event.author.getPermissionsForGuild(event.guild).any { it.hasPermission(8192) }
+        if (!hasPerms) {
+            event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "You don't have permissions to manage messages!", event.author))
+            return
+        }
+
+        val config: ConfigFile = BotUtils.getGuildConfig(event)
+
+        if (event.message.mentions.isEmpty()) {
+            if (args.isEmpty()) {
                 event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Specify the number of messages to delete, and optionally a user!", event.author))
                 return
             }
 
-            val toDelete: Int = args[0].toInt() + 1
-            if(toDelete > 100) {
-                event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Only a maximum of 99 messages can be deleted!", event.author))
+            val toDelete: Int
+            try {
+                toDelete = args[0].toInt() + 1
+            } catch (e: NumberFormatException) {
+                event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "`${args[0]}` is not a valid number", event.author))
                 return
             }
 
-            var removedMessages: Int = 0
-            for(message: IMessage in event.channel.getMessageHistory(toDelete)) {
-                message.delete()
-                removedMessages++
+
+            if (toDelete > 501) {
+                event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Only a maximum of 500 messages can be deleted!", event.author))
+                return
+            } else if(toDelete < 2) {
+                event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "You must provide at least one message to delete!", event.author))
+                return
             }
 
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Removed $removedMessages messages!", event.author))
-        } else {
+            val deleteList: List<IMessage> = event.channel.getMessageHistory(toDelete)
+            event.channel.bulkDelete(deleteList)
 
+            event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Removed ${deleteList.size - 1} message(s)!", event.author))
+            if(config.logModerations) {
+                event.guild.getChannelByID(config.modLogChannel).sendMessage(BotUtils.createSimpleEmbed("Delete", "Removed ${deleteList.size - 1} message(s) from ${event.channel.mention()}", event.author))
+            }
+        } else {
+            val mentions: List<IUser> = event.message.mentions
+            if (args.size == mentions[0].name.split(" ").size) {
+                event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Specify the number of messages to delete, and optionally a user!", event.author))
+                return
+            }
+            val toDelete: Int
+            try {
+                toDelete = args[mentions[0].name.split(" ").size].toInt() + if (mentions[0].longID == event.author.longID) {
+                    1
+                } else {
+                    0
+                }
+            } catch (e: NumberFormatException) {
+                event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "`${args[mentions[0].name.split(" ").size]}` is not a valid number", event.author))
+                return
+            }
+
+            if (toDelete > 501) {
+                event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Only a maximum of 500 messages can be deleted!", event.author))
+                return
+            } else if(toDelete < 1 + if (mentions[0].longID == event.author.longID) { 1 } else { 0 }) {
+                event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "You must provide at least one message to delete!", event.author))
+                return
+            }
+
+            var deletedMessages: Int = 0
+            val deleteQueue: ArrayList<IMessage> = ArrayList()
+            for (message: IMessage in event.channel.getMessageHistory(600)) {
+                if (message.author.longID == mentions[0].longID) {
+                    deleteQueue.add(message)
+                    deletedMessages++
+                    if (deletedMessages >= toDelete) {
+                        break
+                    }
+                }
+            }
+
+            event.channel.bulkDelete(deleteQueue)
+            event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Removed ${deletedMessages - if (mentions[0].longID == event.author.longID) {
+                1
+            } else {
+                0
+            }} message(s)!", event.author))
+
+            if (config.logModerations) {
+                event.guild.getChannelByID(config.modLogChannel).sendMessage(BotUtils.createSimpleEmbed("Delete", "Removed ${deletedMessages - if (mentions[0].longID == event.author.longID) {
+                    1
+                } else {
+                    0
+                }} message(s) from ${event.channel.mention()}", event.author))
+
+            }
         }
     }
 }
