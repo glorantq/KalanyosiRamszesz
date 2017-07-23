@@ -26,6 +26,8 @@
 .idea/*
 .idea
 
+*.iml
+
 .config/*
 .config
 

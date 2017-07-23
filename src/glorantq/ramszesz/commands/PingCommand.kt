@@ -12,8 +12,6 @@ class PingCommand : Command {
         get() = "Pong!"
     override val permission: Permission
         get() = Permission.USER
-    override val useWritingStatus: Boolean
-        get() = true
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         event.channel.sendMessage("Pong! ($args)")

@@ -50,6 +50,8 @@ class HelpCommand : Command {
 
                     embedBuilder.appendField("Aliases", aliases.substring(0, aliases.length - 2), false)
                 }
+
+                embedBuilder.appendField("Permission Level", command.permission.name, false)
             }
         }
 
