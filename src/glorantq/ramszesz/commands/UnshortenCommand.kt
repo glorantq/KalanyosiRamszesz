@@ -2,6 +2,7 @@ package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.BotUtils
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.util.EmbedBuilder
 import java.net.HttpURLConnection
 import java.net.Proxy
@@ -31,9 +32,11 @@ class UnshortenCommand : Command {
             return
         }
 
+        val message: IMessage = event.channel.sendMessage(BotUtils.createSimpleEmbed("Unshorten", "Checking that link for you...", event.author))
+
         thread(isDaemon = true) {
             var shortUrl: String = args[0]
-            if(!shortUrl.startsWith("http://") || !shortUrl.startsWith("https://")) shortUrl = "http://$shortUrl"
+            if(!shortUrl.startsWith("http://") && !shortUrl.startsWith("https://")) shortUrl = "http://$shortUrl"
 
             val url = URL(shortUrl)
             val httpURLConnection = url.openConnection(Proxy.NO_PROXY) as HttpURLConnection
@@ -45,8 +48,12 @@ class UnshortenCommand : Command {
 
             val builder: EmbedBuilder = BotUtils.embed("Unshorten", event.author)
             builder.withDescription("Results are in!")
-            builder.appendField("${args[0]} points to:", expandedURL, false)
-            event.channel.sendMessage(builder.build())
+            if(expandedURL == null || expandedURL.isEmpty()) {
+                builder.appendField("Failed to contact URL", "$shortUrl is unreachable or is not a short link!", false)
+            } else {
+                builder.appendField("$shortUrl points to:", expandedURL, false)
+            }
+            message.edit(builder.build())
         }
     }
 }

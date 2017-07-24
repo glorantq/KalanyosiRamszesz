@@ -26,7 +26,7 @@ class Ramszesz private constructor() {
     }
 
     val logger: Logger = LoggerFactory.getLogger(Ramszesz::class.java)
-    val discord: IDiscordClient = BotUtils.buildDiscordClient("")
+    val discord: IDiscordClient = BotUtils.buildDiscordClient(discordToken)
 
     val configs: ArrayList<ConfigFile> = ArrayList()
     val commands: ArrayList<Command> = ArrayList()
