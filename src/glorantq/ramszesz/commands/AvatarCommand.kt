@@ -19,6 +19,8 @@ class AvatarCommand : Command {
         get() = "Get the avatar of a user. Tag a person to get their avatar"
     override val aliases: List<String>
         get() = listOf("profilepic", "ppic")
+    override val usage: String
+        get() = "[@Mention]"
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val mentions: List<IUser> = event.message.mentions

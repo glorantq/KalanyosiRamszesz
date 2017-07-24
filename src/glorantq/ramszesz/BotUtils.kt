@@ -1,5 +1,6 @@
 package glorantq.ramszesz
 
+import glorantq.ramszesz.commands.Command
 import glorantq.ramszesz.commands.Permission
 import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.api.ClientBuilder
@@ -88,6 +89,17 @@ class BotUtils {
             builder.withFooterIcon(author.avatarURL)
             builder.withTimestamp(System.currentTimeMillis())
             return builder
+        }
+
+        fun hasPermissions(permissionNumber: Int, user: IUser, guild: IGuild): Boolean {
+            return user.getPermissionsForGuild(guild).any { it.hasPermission(permissionNumber) }
+        }
+
+        fun sendUsageEmbed(extraMessage: String, header: String, author: IUser, event: MessageReceivedEvent, command: Command) {
+            val embed: EmbedBuilder = embed(header, author)
+            embed.withDescription(extraMessage)
+            embed.appendField("Usage", "$prefix${command.commandName} ${command.usage}", false)
+            event.channel.sendMessage(embed.build())
         }
     }
 }

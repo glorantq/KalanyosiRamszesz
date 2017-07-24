@@ -2,6 +2,7 @@ package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.BotUtils
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.util.EmbedBuilder
 import java.util.*
 
 /**
@@ -18,7 +19,8 @@ class EmojiConvertCommand : Command {
         get() = listOf("ec", "econv")
     override val permission: Permission
         get() = Permission.USER
-
+    override val usage: String
+        get() = "Message"
     val conversionMap: HashMap<String, String> = HashMap()
     val postProcessMap: HashMap<String, String> = HashMap()
     val letterRegex: Regex = Regex("[a-zA-Z]")
@@ -45,6 +47,11 @@ class EmojiConvertCommand : Command {
     }
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
+        if(args.isEmpty()) {
+            BotUtils.sendUsageEmbed("You need to specify a message!", "Emoji Convert", event.author, event, this)
+            return
+        }
+
         val builder: StringBuilder = StringBuilder()
         for(part: String in args) {
             builder.append(part)

@@ -24,11 +24,12 @@ class UnshortenCommand : Command {
         get() = "Unshorten a URL to see where it actually points to"
     override val aliases: List<String>
         get() = listOf("urlreveal", "linkexpand", "expand")
-
+    override val usage: String
+        get() = "URL"
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         if(args.isEmpty()) {
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Unshorten", "You need to provide a URL!", event.author))
+            BotUtils.sendUsageEmbed("You need to specify a URL!", "Unshorten", event.author, event, this)
             return
         }
 

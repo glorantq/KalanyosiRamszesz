@@ -15,6 +15,8 @@ class HelpCommand : Command {
         get() = "Prints all commands. Specify a command to get more help."
     override val permission: Permission
         get() = Permission.NONE
+    override val usage: String
+        get() = "[Command]"
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val embedBuilder: EmbedBuilder = BotUtils.embed("Command Help", event.author)
@@ -33,6 +35,7 @@ class HelpCommand : Command {
             } else {
                 embedBuilder.withAuthorName("Showing help for $commandName")
                 embedBuilder.appendField("Description", command.description, false)
+                embedBuilder.appendField("Usage", "${BotUtils.prefix}${command.commandName} ${command.usage}", false)
                 embedBuilder.appendField("Extra Help", command.extendedHelp, false)
 
                 if(command.aliases.isNotEmpty()) {

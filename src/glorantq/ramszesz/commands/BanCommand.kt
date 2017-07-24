@@ -19,11 +19,12 @@ class BanCommand : Command {
         get() = Permission.ADMIN
     override val extendedHelp: String
         get() = "Ban a user from the server. Mention a user and optionally specify a reason"
+    override val usage: String
+        get() = "@Mention [Reason]"
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val embed: EmbedBuilder = BotUtils.embed("Ban", event.author)
-        val hasPerms: Boolean = event.author.getPermissionsForGuild(event.guild).any { it.hasPermission(4) }
-        if(!hasPerms) {
+        if(!BotUtils.hasPermissions(4, event.author, event.guild)) {
             embed.withDescription("You don't have permissions to ban users!")
             event.channel.sendMessage(embed.build())
             return
@@ -31,9 +32,7 @@ class BanCommand : Command {
 
         val mentions: List<IUser> = event.message.mentions
         if (mentions.isEmpty()) {
-            embed.withDescription("You need to mention a user!")
-            embed.appendField("Usage", "`r!ban @Mention [Reason]`", false)
-            event.channel.sendMessage(embed.build())
+            BotUtils.sendUsageEmbed("You need to mention a user!", "Ban", event.author, event, this)
             return
         }
         val nameLength: Int = mentions[0].name.split(" ").size

@@ -5,6 +5,7 @@ import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
+import sx.blah.discord.util.EmbedBuilder
 
 /**
  * Created by glora on 2017. 07. 23..
@@ -20,10 +21,11 @@ class DeleteCommand : Command {
         get() = "Delete messages. Mention a user to delete messages from that user"
     override val aliases: List<String>
         get() = listOf("purge")
+    override val usage: String
+        get() = "[@Mention] Amount"
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
-        val hasPerms: Boolean = event.author.getPermissionsForGuild(event.guild).any { it.hasPermission(8192) }
-        if (!hasPerms) {
+        if(!BotUtils.hasPermissions(8192, event.author, event.guild)) {
             event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "You don't have permissions to manage messages!", event.author))
             return
         }
@@ -32,7 +34,7 @@ class DeleteCommand : Command {
 
         if (event.message.mentions.isEmpty()) {
             if (args.isEmpty()) {
-                event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Specify the number of messages to delete, and optionally a user!", event.author))
+                BotUtils.sendUsageEmbed("Specify the number of messages to delete, and optionally a user!", "Delete", event.author, event, this)
                 return
             }
 

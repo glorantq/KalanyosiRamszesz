@@ -16,6 +16,8 @@ interface Command {
     val undocumented: Boolean
         get() = false
     val permission: Permission
+    val usage: String
+        get() = ""
 
     fun execute(event: MessageReceivedEvent, args: List<String>)
 }

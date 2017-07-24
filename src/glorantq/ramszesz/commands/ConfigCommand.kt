@@ -17,6 +17,8 @@ class ConfigCommand : Command {
         get() = "Change config values"
     override val permission: Permission
         get() = Permission.ADMIN
+    override val usage: String
+        get() = "Key Value"
 
     val allowedKeys: ArrayList<String> = ArrayList()
 
@@ -31,7 +33,7 @@ class ConfigCommand : Command {
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         if(args.size < 2) {
-            event.channel.sendMessage("${event.author.mention()}, specify both the config key and value!")
+            BotUtils.sendUsageEmbed("You need to specify both the config key and value!", "Bot Config", event.author, event, this)
         } else {
             val config: ConfigFile = BotUtils.getGuildConfig(event)
             if(!allowedKeys.contains(args[0])) {

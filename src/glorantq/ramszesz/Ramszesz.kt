@@ -10,7 +10,6 @@ import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import java.util.*
-import kotlin.concurrent.thread
 
 /**
  * Created by glorantq on 2017. 07. 22..
@@ -48,6 +47,7 @@ class Ramszesz private constructor() {
         commands.add(PlayingTextCommand())
         commands.add(DeleteCommand())
         commands.add(UnshortenCommand())
+        commands.add(ColourCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()

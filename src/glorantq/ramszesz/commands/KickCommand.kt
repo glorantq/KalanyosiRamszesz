@@ -4,9 +4,7 @@ import glorantq.ramszesz.BotUtils
 import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IUser
-import sx.blah.discord.handle.obj.Permissions
 import sx.blah.discord.util.EmbedBuilder
-import sx.blah.discord.util.PermissionUtils
 
 class KickCommand: Command {
     override val commandName: String
@@ -22,8 +20,7 @@ class KickCommand: Command {
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val embed: EmbedBuilder = BotUtils.embed("Kick", event.author)
-        val canKick: Boolean = event.author.getPermissionsForGuild(event.guild).any { it.hasPermission(2) }
-        if(!canKick) {
+        if(!BotUtils.hasPermissions(2, event.author, event.guild)) {
             embed.withDescription("You don't have permissions to kick users!")
             event.channel.sendMessage(embed.build())
             return
