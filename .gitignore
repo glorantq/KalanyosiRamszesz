@@ -31,6 +31,8 @@
 .config/*
 .config
 
+src/glorantq/ramszesz/KtMain.kt
+
 # CMake
 cmake-build-debug/
 
