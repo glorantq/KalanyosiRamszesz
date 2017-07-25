@@ -82,10 +82,6 @@ class RemoveRoleCommand : Command {
 
         if(assignedBuilder.toString().trim().isNotEmpty()) {
             embed.withDescription("Removed `$assignedBuilder` role(s) from ${mentions[0].mention()}")
-            val config: ConfigFile = BotUtils.getGuildConfig(event)
-            if(config.logModerations) {
-                event.guild.getChannelByID(config.modLogChannel).sendMessage(embed.build())
-            }
         } else {
             embed.withDescription("No roles were removed from ${mentions[0].mention()}")
         }

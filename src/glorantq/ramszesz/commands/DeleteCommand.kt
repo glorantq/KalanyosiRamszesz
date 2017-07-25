@@ -40,7 +40,7 @@ class DeleteCommand : Command {
 
             val toDelete: Int
             try {
-                toDelete = args[0].toInt() + 1
+                toDelete = args[0].toInt() + if(config.deleteCommands) { 0 } else { 1 }
             } catch (e: NumberFormatException) {
                 event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "`${args[0]}` is not a valid number", event.author))
                 return
@@ -55,12 +55,21 @@ class DeleteCommand : Command {
                 return
             }
 
-            val deleteList: List<IMessage> = event.channel.getMessageHistory(toDelete)
-            event.channel.bulkDelete(deleteList)
+            var deletedMessages: Int = 0
+            val deleteQueue: ArrayList<IMessage> = ArrayList()
+            for (message: IMessage in event.channel.getMessageHistory(toDelete)) {
+                deleteQueue.add(message)
+                deletedMessages++
+                if (deletedMessages >= toDelete) {
+                    break
+                }
+            }
 
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Removed ${deleteList.size - 1} message(s)!", event.author))
+            event.channel.bulkDelete(deleteQueue)
+
+            event.channel.sendMessage(BotUtils.createSimpleEmbed("Delete", "Removed $deletedMessages message(s)!", event.author))
             if(config.logModerations) {
-                event.guild.getChannelByID(config.modLogChannel).sendMessage(BotUtils.createSimpleEmbed("Delete", "Removed ${deleteList.size - 1} message(s) from ${event.channel.mention()}", event.author))
+                event.guild.getChannelByID(config.modLogChannel).sendMessage(BotUtils.createSimpleEmbed("Delete", "Removed $deletedMessages message(s) from ${event.channel.mention()}", event.author))
             }
         } else {
             val mentions: List<IUser> = event.message.mentions

@@ -1,6 +1,7 @@
 package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.BotUtils
+import glorantq.ramszesz.Ramszesz
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 
 /**
@@ -27,8 +28,30 @@ class PlayingTextCommand : Command {
         }
 
         var status: String = builder.toString().trim()
-        if(status.isEmpty()) status = "with Viktor's stuff"
-        event.client.changePlayingText(status)
+        status = when(status) {
+            "guild_count" -> buildString {
+                append("in ")
+                append(event.client.guilds.size)
+                append(" guilds")
+            }
+
+            "user_count" -> buildString {
+                var users: Int = 0
+                event.client.guilds.forEach { users += it.users.size }
+                append("with ")
+                append(users)
+                append(" users")
+            }
+
+            else -> if(status.isEmpty()) { "default" } else { status }
+        }
+
+        if(status.equals("default", true)) {
+            Ramszesz.instance.updatePlayingText = true
+        } else {
+            Ramszesz.instance.updatePlayingText = false
+            event.client.changePlayingText(status)
+        }
 
         event.channel.sendMessage(BotUtils.createSimpleEmbed("Change Playing Text", "Successfully changed playing text to: `$status`", event.author))
     }

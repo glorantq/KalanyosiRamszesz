@@ -28,8 +28,7 @@
 
 *.iml
 
-.config/*
-.config
+config
 
 src/glorantq/ramszesz/KtMain.kt
 
@@ -114,4 +113,8 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/java,windows,intellij+all
-/src/glorantq/ramszesz/KtMain.kt
+lib/
+modules/
+!/src/glorantq/ramszesz/config/ConfigFile.kt
+!/src/glorantq/ramszesz/config/*
+!/src/glorantq/ramszesz/config

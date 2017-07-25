@@ -10,6 +10,7 @@ import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import java.util.*
+import kotlin.concurrent.thread
 
 /**
  * Created by glorantq on 2017. 07. 22..
@@ -30,6 +31,8 @@ class Ramszesz private constructor() {
     val configs: ArrayList<ConfigFile> = ArrayList()
     val commands: ArrayList<Command> = ArrayList()
 
+    var updatePlayingText: Boolean = true
+
     init {
         logger.info("Starting Kalányosi Ramszesz...")
         commands.add(PingCommand())
@@ -48,6 +51,7 @@ class Ramszesz private constructor() {
         commands.add(DeleteCommand())
         commands.add(UnshortenCommand())
         commands.add(ColourCommand())
+        commands.add(RoleIDCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()
@@ -57,7 +61,34 @@ class Ramszesz private constructor() {
     fun onBotReady(event: ReadyEvent) {
         logger.info("Bot ready with ${configs.size} configs loaded!")
 
-        event.client.changePlayingText("with Viktor's stuff")
+        thread(isDaemon = true, name = "PlayingStatusUpdater", start = true) {
+            var currentText: Int = 0
+            while(event.client.isLoggedIn) {
+                if (updatePlayingText) {
+                    event.client.changePlayingText(when (currentText) {
+                        0 -> buildString {
+                            append("in ")
+                            append(event.client.guilds.size)
+                            append(" guilds")
+                        }
+
+                        1 -> buildString {
+                            var users: Int = 0
+                            event.client.guilds.forEach { users += it.users.size }
+                            append("with ")
+                            append(users)
+                            append(" users")
+                        }
+
+                        else -> "definitely not with Platin"
+                    })
+
+                    logger.info("Updated playing text to id: $currentText")
+                    if(++currentText > 3) currentText = 0
+                    Thread.sleep(10 * 1000)
+                }
+            }
+        }
     }
 
     fun getConfigForGuild(guildId: String): ConfigFile {
@@ -99,9 +130,11 @@ class Ramszesz private constructor() {
                             command.execute(event, args)
                         }
                     }
-                    break
+                    return
                 }
             }
+
+            event.channel.sendMessage(BotUtils.createSimpleEmbed("Invalid Command", "The command `$commandBase` is invalid", event.author))
         }
     }
 

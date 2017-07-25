@@ -28,31 +28,37 @@ class HelpCommand : Command {
 
         } else {
             val commandName: String = args[0]
-            val command: Command? = Ramszesz.instance.commands.firstOrNull { it.commandName.equals(commandName, true) }
-
-            if(command == null) {
-                embedBuilder.appendField("Invalid Command", "The command `$commandName` is invalid. Run `r!help` for a list of commands", false)
+            if(commandName.equals("document-all", true)) {
+                Ramszesz.instance.commands
+                        .forEach { embedBuilder.appendField(it.commandName, it.description, false) }
             } else {
-                embedBuilder.withAuthorName("Showing help for $commandName")
-                embedBuilder.appendField("Description", command.description, false)
-                embedBuilder.appendField("Usage", "${BotUtils.prefix}${command.commandName} ${command.usage}", false)
-                embedBuilder.appendField("Extra Help", command.extendedHelp, false)
+                val command: Command? = Ramszesz.instance.commands.firstOrNull { it.commandName.equals(commandName, true) }
 
-                if(command.aliases.isNotEmpty()) {
-                    val builder: StringBuilder = StringBuilder()
-                    for(alias: String in command.aliases) {
-                        builder.append(alias)
-                        builder.append(", ")
+                if (command == null) {
+                    embedBuilder.appendField("Invalid Command", "The command `$commandName` is invalid. Run `r!help` for a list of commands", false)
+                } else {
+                    embedBuilder.withAuthorName("Showing help for $commandName")
+                    embedBuilder.appendField("Description", command.description, false)
+                    embedBuilder.appendField("Usage", "${BotUtils.prefix}${command.commandName} ${command.usage}", false)
+                    embedBuilder.appendField("Extra Help", command.extendedHelp, false)
+
+                    if (command.aliases.isNotEmpty()) {
+                        val builder: StringBuilder = StringBuilder()
+                        for (alias: String in command.aliases) {
+                            builder.append(alias)
+                            builder.append(", ")
+                        }
+                        val aliases: String = builder.toString()
+
+                        embedBuilder.appendField("Aliases", aliases.substring(0, aliases.length - 2), false)
                     }
-                    val aliases: String = builder.toString()
 
-                    embedBuilder.appendField("Aliases", aliases.substring(0, aliases.length - 2), false)
+                    embedBuilder.appendField("Permission Level", command.permission.name, false)
                 }
-
-                embedBuilder.appendField("Permission Level", command.permission.name, false)
             }
         }
 
-        event.channel.sendMessage(embedBuilder.build())
+        event.author.orCreatePMChannel.sendMessage(embedBuilder.build())
+        event.channel.sendMessage(BotUtils.createSimpleEmbed("Help", "Alright ${event.author.mention()}, sent you a DM!", event.author))
     }
 }
