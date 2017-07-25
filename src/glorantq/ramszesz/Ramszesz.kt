@@ -52,6 +52,7 @@ class Ramszesz private constructor() {
         commands.add(UnshortenCommand())
         commands.add(ColourCommand())
         commands.add(RoleIDCommand())
+        commands.add(ConvertCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()
