@@ -11,7 +11,7 @@ import java.util.*
 /**
  * Created by glora on 2017. 07. 23..
  */
-class RemoveRoleCommand : Command {
+class RemoveRoleCommand : ICommand {
     override val commandName: String
         get() = "removerole"
     override val description: String

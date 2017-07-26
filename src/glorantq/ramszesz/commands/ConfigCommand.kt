@@ -10,7 +10,7 @@ import java.util.*
 /**
  * Created by glorantq on 2017. 07. 23..
  */
-class ConfigCommand : Command {
+class ConfigCommand : ICommand {
     override val commandName: String
         get() = "config"
     override val description: String

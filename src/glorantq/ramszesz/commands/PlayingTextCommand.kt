@@ -7,7 +7,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 /**
  * Created by glora on 2017. 07. 23..
  */
-class PlayingTextCommand : Command {
+class PlayingTextCommand : ICommand {
     override val commandName: String
         get() = "playingtext"
     override val description: String

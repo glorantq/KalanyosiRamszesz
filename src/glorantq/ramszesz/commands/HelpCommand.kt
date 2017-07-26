@@ -8,7 +8,7 @@ import sx.blah.discord.util.EmbedBuilder
 /**
  * Created by glorantq on 2017. 07. 22..
  */
-class HelpCommand : Command {
+class HelpCommand : ICommand {
     override val commandName: String
         get() = "help"
     override val description: String
@@ -16,10 +16,10 @@ class HelpCommand : Command {
     override val permission: Permission
         get() = Permission.NONE
     override val usage: String
-        get() = "[Command]"
+        get() = "[ICommand]"
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
-        val embedBuilder: EmbedBuilder = BotUtils.embed("Command Help", event.author)
+        val embedBuilder: EmbedBuilder = BotUtils.embed("ICommand Help", event.author)
 
         if(args.isEmpty()) {
             Ramszesz.instance.commands
@@ -32,10 +32,10 @@ class HelpCommand : Command {
                 Ramszesz.instance.commands
                         .forEach { embedBuilder.appendField(it.commandName, it.description, false) }
             } else {
-                val command: Command? = Ramszesz.instance.commands.firstOrNull { it.commandName.equals(commandName, true) }
+                val command: ICommand? = Ramszesz.instance.commands.firstOrNull { it.commandName.equals(commandName, true) }
 
                 if (command == null) {
-                    embedBuilder.appendField("Invalid Command", "The command `$commandName` is invalid. Run `r!help` for a list of commands", false)
+                    embedBuilder.appendField("Invalid ICommand", "The command `$commandName` is invalid. Run `r!help` for a list of commands", false)
                 } else {
                     embedBuilder.withAuthorName("Showing help for $commandName")
                     embedBuilder.appendField("Description", command.description, false)

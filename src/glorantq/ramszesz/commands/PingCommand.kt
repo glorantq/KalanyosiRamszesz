@@ -1,11 +1,12 @@
 package glorantq.ramszesz.commands
 
+import glorantq.ramszesz.BotUtils
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 
 /**
  * Created by glorantq on 2017. 07. 22..
  */
-class PingCommand : Command {
+class PingCommand : ICommand {
     override val commandName: String
         get() = "ping"
     override val description: String
@@ -14,6 +15,6 @@ class PingCommand : Command {
         get() = Permission.USER
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
-        event.channel.sendMessage("Pong! ($args)")
+        event.channel.sendMessage(BotUtils.createSimpleEmbed("Pong!", args.toString(), event.author))
     }
 }

@@ -1,6 +1,6 @@
 package glorantq.ramszesz
 
-import glorantq.ramszesz.commands.Command
+import glorantq.ramszesz.commands.ICommand
 import glorantq.ramszesz.commands.Permission
 import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.api.ClientBuilder
@@ -17,7 +17,7 @@ import sx.blah.discord.util.EmbedBuilder
 class BotUtils {
     companion object {
         val prefix: String = "r!"
-        val embedColor: Int = 16711680
+        val embedColor: Int = 13840175
 
         fun buildDiscordClient(token: String): IDiscordClient {
             return ClientBuilder().withToken(token).withRecommendedShardCount().build()
@@ -85,7 +85,7 @@ class BotUtils {
             val builder: EmbedBuilder = EmbedBuilder()
             builder.withColor(BotUtils.embedColor)
             builder.withAuthorName(header)
-            builder.withFooterText("Command ran by @${author.name}")
+            builder.withFooterText("ICommand ran by @${author.name}")
             builder.withFooterIcon(author.avatarURL)
             builder.withTimestamp(System.currentTimeMillis())
             return builder
@@ -95,7 +95,7 @@ class BotUtils {
             return user.getPermissionsForGuild(guild).any { it.hasPermission(permissionNumber) }
         }
 
-        fun sendUsageEmbed(extraMessage: String, header: String, author: IUser, event: MessageReceivedEvent, command: Command) {
+        fun sendUsageEmbed(extraMessage: String, header: String, author: IUser, event: MessageReceivedEvent, command: ICommand) {
             val embed: EmbedBuilder = embed(header, author)
             embed.withDescription(extraMessage)
             embed.appendField("Usage", "$prefix${command.commandName} ${command.usage}", false)

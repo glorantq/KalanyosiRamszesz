@@ -29,7 +29,7 @@ class Ramszesz private constructor() {
     val discord: IDiscordClient = BotUtils.buildDiscordClient(discordToken)
 
     val configs: ArrayList<ConfigFile> = ArrayList()
-    val commands: ArrayList<Command> = ArrayList()
+    val commands: ArrayList<ICommand> = ArrayList()
 
     var updatePlayingText: Boolean = true
 
@@ -53,6 +53,7 @@ class Ramszesz private constructor() {
         commands.add(ColourCommand())
         commands.add(RoleIDCommand())
         commands.add(ConvertCommand())
+        commands.add(MemeCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()
@@ -117,7 +118,7 @@ class Ramszesz private constructor() {
 
             val commandBase: String = parts[0].replaceFirst(BotUtils.prefix, "", true)
 
-            for (command: Command in commands) {
+            for (command: ICommand in commands) {
                 if (command.commandName.equals(commandBase, true) || command.aliases.contains(commandBase.toLowerCase())) {
                     if (getConfigForGuild(event.guild.stringID).deleteCommands) {
                         event.message.delete()
@@ -135,7 +136,7 @@ class Ramszesz private constructor() {
                 }
             }
 
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Invalid Command", "The command `$commandBase` is invalid", event.author))
+            event.channel.sendMessage(BotUtils.createSimpleEmbed("Invalid ICommand", "The command `$commandBase` is invalid", event.author))
         }
     }
 

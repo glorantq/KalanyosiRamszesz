@@ -2,13 +2,12 @@ package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.BotUtils
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
-import sx.blah.discord.util.EmbedBuilder
 import java.util.*
 
 /**
  * Created by glorantq on 2017. 07. 22..
  */
-class EmojiConvertCommand : Command {
+class EmojiConvertCommand : ICommand {
     override val commandName: String
         get() = "emojiconvert"
     override val description: String

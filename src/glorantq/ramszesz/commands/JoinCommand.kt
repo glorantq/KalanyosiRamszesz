@@ -8,7 +8,7 @@ import sx.blah.discord.util.EmbedBuilder
 /**
  * Created by glora on 2017. 07. 23..
  */
-class JoinCommand : Command {
+class JoinCommand : ICommand {
     override val commandName: String
         get() = "invite"
     override val description: String

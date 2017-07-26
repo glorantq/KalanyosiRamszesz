@@ -13,7 +13,7 @@ import kotlin.concurrent.thread
 /**
  * Created by glora on 2017. 07. 23..
  */
-class UnshortenCommand : Command {
+class UnshortenCommand : ICommand {
     override val commandName: String
         get() = "unshorten"
     override val description: String

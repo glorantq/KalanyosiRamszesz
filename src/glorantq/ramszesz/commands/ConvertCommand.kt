@@ -6,7 +6,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 /**
  * Created by glora on 2017. 07. 25..
  */
-class ConvertCommand : Command {
+class ConvertCommand : ICommand {
     override val commandName: String
         get() = "convert"
     override val description: String

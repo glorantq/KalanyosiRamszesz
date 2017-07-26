@@ -3,10 +3,9 @@ package glorantq.ramszesz.commands
 import glorantq.ramszesz.BotUtils
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IRole
-import sx.blah.discord.util.EmbedBuilder
 import java.awt.Color
 
-class ColourCommand : Command {
+class ColourCommand : ICommand {
     override val commandName: String
         get() = "rolecolour"
     override val description: String

@@ -6,7 +6,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
 
-class KickCommand: Command {
+class KickCommand: ICommand {
     override val commandName: String
         get() = "kick"
     override val description: String

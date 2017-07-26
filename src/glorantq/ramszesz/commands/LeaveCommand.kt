@@ -6,7 +6,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 /**
  * Created by glorantq on 2017. 07. 23..
  */
-class LeaveCommand : Command {
+class LeaveCommand : ICommand {
     override val commandName: String
         get() = "leave"
     override val description: String

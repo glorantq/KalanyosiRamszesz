@@ -7,7 +7,7 @@ import sx.blah.discord.handle.obj.IRole
 /**
  * Created by glora on 2017. 07. 24..
  */
-class RoleIDCommand : Command {
+class RoleIDCommand : ICommand {
     override val commandName: String
         get() = "roleid"
     override val description: String

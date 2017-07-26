@@ -8,7 +8,7 @@ import sx.blah.discord.util.EmbedBuilder
 /**
  * Created by glorantq on 2017. 07. 23..
  */
-class ConfigDumpCommand : Command {
+class ConfigDumpCommand : ICommand {
     override val commandName: String
         get() = "configdump"
     override val description: String

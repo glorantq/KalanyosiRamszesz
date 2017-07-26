@@ -3,14 +3,13 @@ package glorantq.ramszesz.commands
 import glorantq.ramszesz.BotUtils
 import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
-import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
 
 /**
  * Created by glora on 2017. 07. 23..
  */
-class BanCommand : Command {
+class BanCommand : ICommand {
     override val commandName: String
         get() = "ban"
     override val description: String

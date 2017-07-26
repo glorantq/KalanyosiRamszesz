@@ -5,12 +5,11 @@ import glorantq.ramszesz.config.ConfigFile
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
-import sx.blah.discord.util.EmbedBuilder
 
 /**
  * Created by glora on 2017. 07. 23..
  */
-class DeleteCommand : Command {
+class DeleteCommand : ICommand {
     override val commandName: String
         get() = "delete"
     override val description: String

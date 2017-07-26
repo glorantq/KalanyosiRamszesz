@@ -6,7 +6,7 @@ import java.util.*
 /**
  * Created by glorantq on 2017. 07. 22..
  */
-interface Command {
+interface ICommand {
     val commandName: String
     val description: String
     val extendedHelp: String

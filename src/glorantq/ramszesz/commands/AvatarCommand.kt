@@ -8,7 +8,7 @@ import sx.blah.discord.util.EmbedBuilder
 /**
  * Created by glora on 2017. 07. 23..
  */
-class AvatarCommand : Command {
+class AvatarCommand : ICommand {
     override val commandName: String
         get() = "avatar"
     override val description: String

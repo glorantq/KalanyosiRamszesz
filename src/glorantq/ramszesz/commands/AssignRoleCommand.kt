@@ -6,13 +6,12 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IRole
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
-import sx.blah.discord.util.MissingPermissionsException
 import java.util.*
 
 /**
  * Created by glora on 2017. 07. 23..
  */
-class AssignRoleCommand : Command {
+class AssignRoleCommand : ICommand {
     override val commandName: String
         get() = "assignrole"
     override val description: String
