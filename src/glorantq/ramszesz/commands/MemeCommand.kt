@@ -6,6 +6,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IUser
+import sx.blah.discord.util.EmbedBuilder
 import kotlin.concurrent.thread
 
 /**
@@ -17,7 +18,7 @@ class MemeCommand : ICommand {
     override val description: String
         get() = "Generate memes in Discord"
     override val permission: Permission
-        get() = Permission.USER
+        get() = Permission.SQUAD
     override val extendedHelp: String
         get() = "Generate memes in Discord."
     override val aliases: List<String>
@@ -29,6 +30,7 @@ class MemeCommand : ICommand {
 
     init {
         memes.add(TriggeredMeme())
+        memes.add(NumberOneMeme())
     }
 
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -102,7 +104,14 @@ class MemeCommand : ICommand {
     private fun exec(event: MessageReceivedEvent, meme: IMeme) {
         thread(name = "MemeExec-${meme.name}-${event.author.name}-${System.nanoTime()}", isDaemon = true, start = true) {
             logger.info("Executing meme...")
-            meme.execute(event)
+            try {
+                meme.execute(event)
+            } catch (e: Exception) {
+                val embed: EmbedBuilder = BotUtils.embed("Meme Generator", event.author)
+                embed.withDescription("I couldn't deliver your meme because @glorantq can't code")
+                embed.appendField(e::class.simpleName, e.message, false)
+                event.channel.sendMessage(embed.build())
+            }
             logger.info("Finished!")
         }
     }

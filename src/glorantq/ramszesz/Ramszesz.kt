@@ -10,6 +10,7 @@ import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
 /**
@@ -30,6 +31,17 @@ class Ramszesz private constructor() {
 
     val configs: ArrayList<ConfigFile> = ArrayList()
     val commands: ArrayList<ICommand> = ArrayList()
+    val squad: ArrayList<Long> = arrayListOf(
+            126481324017057792,
+            338439383252336640,
+            138988491240505345,
+            269452193826865153,
+            251374678688530433,
+            252070801476419584,
+            129213229221019648,
+            292976637463756800,
+            312356544454852619
+    )
 
     var updatePlayingText: Boolean = true
 
@@ -125,6 +137,12 @@ class Ramszesz private constructor() {
                     }
                     if (command.permission == Permission.BOT_OWNER && event.author.longID == 251374678688530433) {
                         command.execute(event, args)
+                    } else if(command.permission == Permission.SQUAD) {
+                        if(squad.contains(event.author.longID)) {
+                            command.execute(event, args)
+                        } else {
+                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Missing Permissions", "I'm sorry ${event.author.mention()}, but only the hyper-extra-super-dev-super-squad members can run this command!", event.author))
+                        }
                     } else {
                         if (BotUtils.getPermissionLevel(event.author, event.guild).ordinal < command.permission.ordinal) {
                             event.channel.sendMessage(BotUtils.createSimpleEmbed("Missing Permissions", "I'm sorry ${event.author.mention()}, but you don't have permissions to run this command", event.author))
@@ -136,7 +154,7 @@ class Ramszesz private constructor() {
                 }
             }
 
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Invalid ICommand", "The command `$commandBase` is invalid", event.author))
+            event.channel.sendMessage(BotUtils.createSimpleEmbed("Invalid Command", "The command `$commandBase` is invalid", event.author))
         }
     }
 

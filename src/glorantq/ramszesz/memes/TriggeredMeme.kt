@@ -37,7 +37,6 @@ class TriggeredMeme : IMeme {
         val graphics: Graphics = combined.graphics
         graphics.drawImage(profileImage, 0, 0, null)
         graphics.drawImage(triggered, 0, profileImage.height - triggeredHeight, profileImage.width, triggeredHeight, null)
-        graphics.drawImage(triggered, 0, 0, profileImage.width, triggeredHeight, null)
         graphics.dispose()
 
         val imageFile: File = File.createTempFile("triggered-meme-${event.author.name}", ".png")
@@ -46,11 +45,7 @@ class TriggeredMeme : IMeme {
 
         val url: String = cloudinary.uploader().upload(imageFile, ObjectUtils.emptyMap())["secure_url"].toString()
 
-        val builder: EmbedBuilder = BotUtils.embed("Meme Generator", event.author)
-        builder.withDescription("Her'es your m'eme")
-        builder.withImage(url)
-
-        event.channel.sendMessage(builder.build())
+        deliverMeme(event, url)
         imageFile.delete()
     }
 }

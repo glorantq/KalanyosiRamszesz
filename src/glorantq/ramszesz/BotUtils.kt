@@ -85,7 +85,7 @@ class BotUtils {
             val builder: EmbedBuilder = EmbedBuilder()
             builder.withColor(BotUtils.embedColor)
             builder.withAuthorName(header)
-            builder.withFooterText("ICommand ran by @${author.name}")
+            builder.withFooterText("Command ran by @${author.name}")
             builder.withFooterIcon(author.avatarURL)
             builder.withTimestamp(System.currentTimeMillis())
             return builder
