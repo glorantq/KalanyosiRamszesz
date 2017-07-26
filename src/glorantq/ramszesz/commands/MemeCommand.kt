@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
+import java.util.*
 import kotlin.concurrent.thread
 
 /**
@@ -26,11 +27,15 @@ class MemeCommand : ICommand {
     override val usage: String
         get() = "Meme [Arguments]"
 
-    val memes: ArrayList<IMeme> = ArrayList()
+    companion object {
+        val memes: ArrayList<IMeme> = ArrayList()
+    }
 
     init {
+        memes.add(MemeList())
         memes.add(TriggeredMeme())
         memes.add(NumberOneMeme())
+        memes.add(ThinkingMeme())
     }
 
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -57,6 +62,9 @@ class MemeCommand : ICommand {
                     if(memeArgs.size - 1 < meme.parameters.size) {
                         BotUtils.sendUsageEmbed("This meme requires more arguments!", "Meme", event.author, event, this)
                         return
+                    } else if(memeArgs.size - 1 > meme.parameters.size) {
+                        BotUtils.sendUsageEmbed("This meme requires fewer arguments!", "Meme", event.author, event, this)
+                        return
                     } else {
                         for(i: Int in 1..memeArgs.size - 1) {
                             when(meme.parameters[i - 1].type) {
@@ -75,12 +83,18 @@ class MemeCommand : ICommand {
 
                                 MemeParameter.Companion.Type.USER -> {
                                     val idParam: String = memeArgs[i]
-                                    if(!idParam.matches(checkIDRegex)) {
-                                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Meme", "`$idParam` is not a valid tag!", event.author))
-                                        return
+                                    val userId: Long
+                                    if(idParam.equals("random_user", true)) {
+                                        userId = event.guild.users[Random().nextInt(event.guild.users.size)].longID
+                                    } else {
+                                        if (!idParam.matches(checkIDRegex)) {
+                                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Meme", "`$idParam` is not a valid tag!", event.author))
+                                            return
+                                        } else {
+                                            userId = idParam.replace(replaceTagsRegex, "").toLong()
+                                        }
                                     }
 
-                                    val userId: Long = idParam.replace(replaceTagsRegex, "").toLong()
                                     val user: IUser? = event.guild.getUserByID(userId)
 
                                     if(user == null) {
@@ -96,9 +110,11 @@ class MemeCommand : ICommand {
                 }
 
                 exec(event, meme)
-                break
+                return
             }
         }
+
+        event.channel.sendMessage(BotUtils.createSimpleEmbed("Meme Generator", "`${args[0]}` is not a valid meme", event.author))
     }
 
     private fun exec(event: MessageReceivedEvent, meme: IMeme) {
