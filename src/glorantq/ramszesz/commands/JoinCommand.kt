@@ -15,6 +15,8 @@ class JoinCommand : ICommand {
         get() = "Get a link to invite this bot to your server"
     override val permission: Permission
         get() = Permission.NONE
+    override val availabeInDM: Boolean
+        get() = true
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val builder: EmbedBuilder = BotUtils.embed("Invite", event.author)

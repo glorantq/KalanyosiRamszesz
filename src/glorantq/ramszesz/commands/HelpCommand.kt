@@ -16,7 +16,9 @@ class HelpCommand : ICommand {
     override val permission: Permission
         get() = Permission.NONE
     override val usage: String
-        get() = "[ICommand]"
+        get() = "[Command]"
+    override val availabeInDM: Boolean
+        get() = true
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val embedBuilder: EmbedBuilder = BotUtils.embed("ICommand Help", event.author)
@@ -41,6 +43,7 @@ class HelpCommand : ICommand {
                     embedBuilder.appendField("Description", command.description, false)
                     embedBuilder.appendField("Usage", "${BotUtils.prefix}${command.commandName} ${command.usage}", false)
                     embedBuilder.appendField("Extra Help", command.extendedHelp, false)
+                    embedBuilder.appendField("Does it work in DMs?", if(command.availabeInDM) { "Yes" } else { "No" }, false)
 
                     if (command.aliases.isNotEmpty()) {
                         val builder: StringBuilder = StringBuilder()
@@ -59,6 +62,8 @@ class HelpCommand : ICommand {
         }
 
         event.author.orCreatePMChannel.sendMessage(embedBuilder.build())
-        event.channel.sendMessage(BotUtils.createSimpleEmbed("Help", "Alright ${event.author.mention()}, sent you a DM!", event.author))
+        if(!event.channel.isPrivate) {
+            event.channel.sendMessage(BotUtils.createSimpleEmbed("Help", "Alright ${event.author.mention()}, sent you a DM!", event.author))
+        }
     }
 }

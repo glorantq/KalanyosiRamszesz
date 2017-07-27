@@ -15,6 +15,8 @@ class ConvertCommand : ICommand {
         get() = Permission.USER
     override val usage: String
         get() = "From"
+    override val availabeInDM: Boolean
+        get() = true
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         if(args.isEmpty()) {

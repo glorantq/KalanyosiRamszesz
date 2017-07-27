@@ -18,6 +18,8 @@ class PlayingTextCommand : ICommand {
         get() = listOf("playing", "pt")
     override val undocumented: Boolean
         get() = true
+    override val availabeInDM: Boolean
+        get() = true
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val builder: StringBuilder = StringBuilder()

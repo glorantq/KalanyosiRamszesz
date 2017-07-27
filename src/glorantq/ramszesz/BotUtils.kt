@@ -64,11 +64,10 @@ class BotUtils {
             return false
         }
 
-        fun getPermissionLevel(user: IUser, guild: IGuild): Permission {
-            return if(guild.ownerLongID == user.longID) {
+        fun getPermissionLevel(user: IUser, guild: IGuild?): Permission {
+            return if(guild == null || guild.ownerLongID == user.longID) {
                 Permission.OWNER
-            }
-            else if(isUserAdmin(user, guild)) {
+            } else if(isUserAdmin(user, guild)) {
                 Permission.ADMIN
             } else if(isUser(user, guild)) {
                 Permission.USER

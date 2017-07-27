@@ -18,6 +18,8 @@ interface ICommand {
     val permission: Permission
     val usage: String
         get() = ""
+    val availabeInDM: Boolean
+        get() = false
 
     fun execute(event: MessageReceivedEvent, args: List<String>)
 }

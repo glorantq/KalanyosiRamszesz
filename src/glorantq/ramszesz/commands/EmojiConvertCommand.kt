@@ -20,6 +20,9 @@ class EmojiConvertCommand : ICommand {
         get() = Permission.USER
     override val usage: String
         get() = "Message"
+    override val availabeInDM: Boolean
+        get() = true
+
     val conversionMap: HashMap<String, String> = HashMap()
     val postProcessMap: HashMap<String, String> = HashMap()
     val letterRegex: Regex = Regex("[a-zA-Z]")
@@ -38,7 +41,32 @@ class EmojiConvertCommand : ICommand {
 
         conversionMap.put("?", ":grey_question:")
         conversionMap.put("!", ":grey_exclamation:")
-        conversionMap.put(" ", "    ")
+        conversionMap.put("#", ":hash:")
+        conversionMap.put("*", ":asterisk:")
+        conversionMap.put("@", "<:ramszesz_emoji_at:340218056192163842>")
+        conversionMap.put("&", "<:ramszesz_emoji_and:340221936426680320>")
+        conversionMap.put(")", "<:ramszesz_emoji_close_bracket:340222063203844108>")
+        conversionMap.put("]", "<:ramszesz_emoji_close_sqbracket:340222079473287178>")
+        conversionMap.put(",", "<:ramszesz_emoji_comma:340224584013840384>")
+        conversionMap.put("-", "<:ramszesz_emoji_dash:340222099975045123>")
+        conversionMap.put("$", "<:ramszesz_emoji_dollar:340222111320768512>")
+        conversionMap.put(".", "<:ramszesz_emoji_dot:340222120476803094>")
+        conversionMap.put("=", "<:ramszesz_emoji_equals:340222131134791680>")
+        conversionMap.put("€", "<:ramszesz_emoji_euro:340222142983438358>")
+        conversionMap.put("(", "<:ramszesz_emoji_open_bracket:340222174138728448>")
+        conversionMap.put("[", "<:ramszesz_emoji_open_sqbracket:340222079473287178>")
+        conversionMap.put("\"", "<:ramszesz_emoji_quotes:340222194636292096>")
+        conversionMap.put("ß", "<:ramszesz_emoji_ss:340222228157300737>")
+        conversionMap.put(";", "<:ramszesz_emoji_semicolon:340222208427294730>")
+        conversionMap.put("<", "<:ramszesz_emoji_lt:340222163455836180>")
+        conversionMap.put(">", "<:ramszesz_emoji_gt:340222154454859777>")
+        conversionMap.put(":", "<:ramszesz_emoji_colon:340225548188123136>")
+        conversionMap.put("/", "<:ramszesz_emoji_slash:340225606216318986>")
+        conversionMap.put("+", "<:ramszesz_emoji_plus:340225604265705472>")
+        conversionMap.put("%", "<:ramszesz_emoji_percent:340225585525555200>")
+        conversionMap.put(" ", "<:ramszesz_emoji_space:340231688997306378>")
+        conversionMap.put("_", "<:ramszesz_emoji_underscore:340234186113679360>")
+        conversionMap.put("\\", "<:ramszesz_emoji_backslash:340235599749447699>")
 
         postProcessMap.put(":regional_indicator_b:", ":b:")
         postProcessMap.put(":grey_exclamation::grey_exclamation:", ":bangbang:")

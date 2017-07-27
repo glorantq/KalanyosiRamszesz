@@ -66,6 +66,7 @@ class Ramszesz private constructor() {
         commands.add(RoleIDCommand())
         commands.add(ConvertCommand())
         commands.add(MemeCommand())
+        commands.add(PasswordCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()
@@ -77,7 +78,7 @@ class Ramszesz private constructor() {
 
         thread(isDaemon = true, name = "PlayingStatusUpdater", start = true) {
             var currentText: Int = 0
-            while(event.client.isLoggedIn) {
+            while (event.client.isLoggedIn) {
                 if (updatePlayingText) {
                     event.client.changePlayingText(when (currentText) {
                         0 -> buildString {
@@ -98,7 +99,7 @@ class Ramszesz private constructor() {
                     })
 
                     logger.info("Updated playing text to id: $currentText")
-                    if(++currentText > 3) currentText = 0
+                    if (++currentText > 3) currentText = 0
                     Thread.sleep(10 * 1000)
                 }
             }
@@ -132,13 +133,17 @@ class Ramszesz private constructor() {
 
             for (command: ICommand in commands) {
                 if (command.commandName.equals(commandBase, true) || command.aliases.contains(commandBase.toLowerCase())) {
-                    if (getConfigForGuild(event.guild.stringID).deleteCommands) {
+                    if (!event.channel.isPrivate && getConfigForGuild(event.guild.stringID).deleteCommands) {
                         event.message.delete()
+                    }
+                    if (event.channel.isPrivate && !command.availabeInDM) {
+                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I'm sorry ${event.author.mention()}, but this command don't work in DMs!", event.author))
+                        return
                     }
                     if (command.permission == Permission.BOT_OWNER && event.author.longID == 251374678688530433) {
                         command.execute(event, args)
-                    } else if(command.permission == Permission.SQUAD) {
-                        if(squad.contains(event.author.longID)) {
+                    } else if (command.permission == Permission.SQUAD) {
+                        if (squad.contains(event.author.longID)) {
                             command.execute(event, args)
                         } else {
                             event.channel.sendMessage(BotUtils.createSimpleEmbed("Missing Permissions", "I'm sorry ${event.author.mention()}, but only the hyper-extra-super-dev-super-squad members can run this command!", event.author))
