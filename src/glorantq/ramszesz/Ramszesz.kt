@@ -67,6 +67,7 @@ class Ramszesz private constructor() {
         commands.add(ConvertCommand())
         commands.add(MemeCommand())
         commands.add(PasswordCommand())
+        commands.add(GuildListCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()

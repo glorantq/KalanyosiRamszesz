@@ -18,6 +18,7 @@ interface IMeme {
         val builder: EmbedBuilder = BotUtils.embed("Meme Generator", event.author)
         builder.withDescription("Her'es your m'eme")
         builder.withImage(url)
+        builder.withUrl(url)
 
         event.channel.sendMessage(builder.build())
     }
