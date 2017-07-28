@@ -77,7 +77,7 @@ class MemeCommand : ICommand {
                                     try {
                                         setParam(i - 1, meme, memeArgs[i].toInt())
                                     } catch (e: NumberFormatException) {
-                                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Meme", "`${memeArgs[i]}` is not a valid number!", event.author))
+                                        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Meme", "`${memeArgs[i]}` is not a valid number!", event.author), event.channel)
                                         return
                                     }
                                 }
@@ -89,7 +89,7 @@ class MemeCommand : ICommand {
                                         userId = event.guild.users[Random().nextInt(event.guild.users.size)].longID
                                     } else {
                                         if (!idParam.matches(checkIDRegex)) {
-                                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Meme", "`$idParam` is not a valid tag!", event.author))
+                                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Meme", "`$idParam` is not a valid tag!", event.author), event.channel)
                                             return
                                         } else {
                                             userId = idParam.replace(replaceTagsRegex, "").toLong()
@@ -99,7 +99,7 @@ class MemeCommand : ICommand {
                                     val user: IUser? = event.guild.getUserByID(userId)
 
                                     if(user == null) {
-                                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Meme", "`$userId` is not a valid ID!", event.author))
+                                        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Meme", "`$userId` is not a valid ID!", event.author), event.channel)
                                         return
                                     } else {
                                         setParam(i - 1, meme, user)
@@ -115,7 +115,7 @@ class MemeCommand : ICommand {
             }
         }
 
-        event.channel.sendMessage(BotUtils.createSimpleEmbed("Meme Generator", "`${args[0]}` is not a valid meme", event.author))
+        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Meme Generator", "`${args[0]}` is not a valid meme", event.author), event.channel)
     }
 
     private fun exec(event: MessageReceivedEvent, meme: IMeme) {
@@ -127,7 +127,7 @@ class MemeCommand : ICommand {
                 val embed: EmbedBuilder = BotUtils.embed("Meme Generator", event.author)
                 embed.withDescription("I couldn't deliver your meme because @glorantq can't code")
                 embed.appendField(e::class.simpleName, e.message, false)
-                event.channel.sendMessage(embed.build())
+                BotUtils.sendMessage(embed.build(), event.channel)
             }
             logger.info("Finished!")
         }

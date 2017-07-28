@@ -40,23 +40,23 @@ class PasswordCommand : ICommand {
                 try {
                     length = args[0].toInt()
                 } catch (e: NumberFormatException) {
-                    event.channel.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "`${args[0]}` is not a valid number", event.author))
+                    BotUtils.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "`${args[0]}` is not a valid number", event.author), event.channel)
                     return@thread
                 }
             }
 
             if(length == 0) {
-                event.channel.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "A zero-length password isn't that secure!", event.author))
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "A zero-length password isn't that secure!", event.author), event.channel)
                 return@thread
             }
 
             if(length < 0) {
                 length *= -1
-                event.channel.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "The number `${args[0]}` is negative, it has been changed to `$length`", event.author))
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "The number `${args[0]}` is negative, it has been changed to `$length`", event.author), event.channel)
             }
 
             if(length > 64) {
-                event.channel.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "The number `${args[0]}` is too large", event.author))
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "The number `${args[0]}` is too large", event.author), event.channel)
                 return@thread
             }
 
@@ -74,7 +74,7 @@ class PasswordCommand : ICommand {
 
             val message: IMessage = event.author.orCreatePMChannel.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "Your random password is: `$finalBuilder` ($length characters long). This message will disappear in 15 seconds", event.author))
             if(!event.channel.isPrivate) {
-                event.channel.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "Alright ${event.author.mention()}, sent you a DM!", event.author))
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Password Generator", "Alright ${event.author.mention()}, sent you a DM!", event.author), event.channel)
             }
 
             Thread.sleep(15 * 1000)

@@ -37,17 +37,17 @@ class ConfigCommand : ICommand {
         } else {
             val config: ConfigFile = BotUtils.getGuildConfig(event)
             if(!allowedKeys.contains(args[0])) {
-                event.channel.sendMessage("${event.author.mention()}, the key `${args[0]}` isn't valid!")
+                BotUtils.sendMessage("${event.author.mention()}, the key `${args[0]}` isn't valid!", event.channel)
             } else {
                 when(args[0]) {
                     "emojiNameAppend" -> {
                         config.emojiNameAppend = args[1].equals("true", true)
-                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `emojiNameAppend` has been set to ${config.emojiNameAppend}", event.author))
+                        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `emojiNameAppend` has been set to ${config.emojiNameAppend}", event.author), event.channel)
                     }
 
                     "deleteCommands" -> {
                         config.deleteCommands = args[1].equals("true", true)
-                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `deleteCommands` has been set to ${config.deleteCommands}", event.author))
+                        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `deleteCommands` has been set to ${config.deleteCommands}", event.author), event.channel)
                     }
 
                     "adminRole" -> {
@@ -59,17 +59,17 @@ class ConfigCommand : ICommand {
 
                         if(roleName.equals("owner", true)) {
                             config.adminRole = -1L
-                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `adminRole` has been set to Server Owner", event.author))
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `adminRole` has been set to Server Owner", event.author), event.channel)
                             return
                         }
 
                         val roles: List<IRole> = event.guild.getRolesByName(roleName)
                         if(roles.isEmpty()) {
-                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "That role doesn't exist!", event.author))
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "That role doesn't exist!", event.author), event.channel)
                         } else {
                             config.adminRole = roles[0].longID
                         }
-                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `adminRole` has been set to ${roles[0].name}", event.author))
+                        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `adminRole` has been set to ${roles[0].name}", event.author), event.channel)
                     }
 
                     "userRole" -> {
@@ -81,27 +81,27 @@ class ConfigCommand : ICommand {
 
                         if(roleName.equals("everyone", true)) {
                             config.userRole = -1L
-                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `userRole` has been set to Everyone", event.author))
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `userRole` has been set to Everyone", event.author), event.channel)
                             return
                         }
 
                         val roles: List<IRole> = event.guild.getRolesByName(roleName)
                         if(roles.isEmpty()) {
-                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "That role doesn't exist!", event.author))
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "That role doesn't exist!", event.author), event.channel)
                         } else {
                             config.userRole = roles[0].longID
                         }
-                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `userRole` has been set to ${roles[0].name}", event.author))
+                        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `userRole` has been set to ${roles[0].name}", event.author), event.channel)
                     }
 
                     "logModerations" -> {
                         if(config.modLogChannel == -1L) {
-                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "You need to set `modLogChannel` before setting `logModerations`", event.author))
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "You need to set `modLogChannel` before setting `logModerations`", event.author), event.channel)
                             return
                         }
 
                         config.logModerations = args[1].equals("true", true)
-                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `logModerations` has been set to ${config.logModerations}", event.author))
+                        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `logModerations` has been set to ${config.logModerations}", event.author), event.channel)
                     }
 
                     "modLogChannel" -> {
@@ -109,16 +109,16 @@ class ConfigCommand : ICommand {
                             config.logModerations = false
                             config.modLogChannel = -1L
 
-                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `modLogChannel` has been set to none and logging was disabled", event.author))
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `modLogChannel` has been set to none and logging was disabled", event.author), event.channel)
                             return
                         }
 
                         val channels: List<IChannel> = event.guild.getChannelsByName(args[1])
                         if(channels.isEmpty()) {
-                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "Couldn't find that channel!", event.author))
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "Couldn't find that channel!", event.author), event.channel)
                         } else {
                             config.modLogChannel = channels[0].longID
-                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `modLogChannel` has been set to ${channels[0].name}", event.author))
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `modLogChannel` has been set to ${channels[0].name}", event.author), event.channel)
                             channels[0].sendMessage(BotUtils.createSimpleEmbed("Moderation Logging", "Moderation logging has been bound to this channel", event.author))
                         }
                     }

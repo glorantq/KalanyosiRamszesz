@@ -29,7 +29,7 @@ class RemoveRoleCommand : ICommand {
         val embed: EmbedBuilder = BotUtils.embed("Remove Role", event.author)
         if(!BotUtils.hasPermissions(268435456, event.author, event.guild)) {
             embed.withDescription("You don't have permissions to manage roles!")
-            event.channel.sendMessage(embed.build())
+            BotUtils.sendMessage(embed.build(), event.channel)
             return
         }
 
@@ -91,6 +91,6 @@ class RemoveRoleCommand : ICommand {
             event.guild.getChannelByID(config.modLogChannel).sendMessage(embed.build())
         }
 
-        event.channel.sendMessage(embed.build())
+        BotUtils.sendMessage(embed.build(), event.channel)
     }
 }

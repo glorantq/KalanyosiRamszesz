@@ -21,7 +21,7 @@ class ColourCommand : ICommand {
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         if(!BotUtils.hasPermissions(268435456, event.author, event.guild)) {
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Colour", "You don't have permissions to manage roles!", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Colour", "You don't have permissions to manage roles!", event.author), event.channel)
             return
         }
 
@@ -32,7 +32,7 @@ class ColourCommand : ICommand {
 
         val colourCode: String = args[0].replace("#", "")
         if(colourCode.length != 6) {
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Colour", "The colour code `$colourCode` is invalid!", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Colour", "The colour code `$colourCode` is invalid!", event.author), event.channel)
             return
         }
 
@@ -45,16 +45,16 @@ class ColourCommand : ICommand {
         val roleName: String = roleBuilder.toString().trim()
         val roles: List<IRole> = event.guild.getRolesByName(roleName)
         if(roles.isEmpty()) {
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Colour", "The role `$roleName` is invalid!", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Colour", "The role `$roleName` is invalid!", event.author), event.channel)
             return
         }
 
         val role: IRole = roles[0]
         try {
             role.changeColor(Color(Integer.parseInt(colourCode, 16)))
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Colour", "The colour of `$roleName` has been set to `$colourCode`", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Colour", "The colour of `$roleName` has been set to `$colourCode`", event.author), event.channel)
         } catch(e: NumberFormatException) {
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Colour", "The colour code `$colourCode` is invalid!", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Colour", "The colour code `$colourCode` is invalid!", event.author), event.channel)
         }
     }
 }

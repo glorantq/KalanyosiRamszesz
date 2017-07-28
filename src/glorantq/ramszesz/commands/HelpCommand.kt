@@ -63,7 +63,7 @@ class HelpCommand : ICommand {
 
         event.author.orCreatePMChannel.sendMessage(embedBuilder.build())
         if(!event.channel.isPrivate) {
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Help", "Alright ${event.author.mention()}, sent you a DM!", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Help", "Alright ${event.author.mention()}, sent you a DM!", event.author), event.channel)
         }
     }
 }

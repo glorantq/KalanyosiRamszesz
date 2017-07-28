@@ -32,7 +32,7 @@ class GuildListCommand : ICommand {
 
         event.author.orCreatePMChannel.sendMessage(embed.build())
         if(!event.channel.isPrivate) {
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Guild List", "Alright ${event.author.mention()}, sent you a DM!", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Guild List", "Alright ${event.author.mention()}, sent you a DM!", event.author), event.channel)
         }
     }
 }

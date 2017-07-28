@@ -25,7 +25,7 @@ class BanCommand : ICommand {
         val embed: EmbedBuilder = BotUtils.embed("Ban", event.author)
         if(!BotUtils.hasPermissions(4, event.author, event.guild)) {
             embed.withDescription("You don't have permissions to ban users!")
-            event.channel.sendMessage(embed.build())
+            BotUtils.sendMessage(embed.build(), event.channel)
             return
         }
 
@@ -62,6 +62,6 @@ class BanCommand : ICommand {
             embed.appendField(e::class.simpleName, e.message, false)
         }
 
-        event.channel.sendMessage(embed.build())
+        BotUtils.sendMessage(embed.build(), event.channel)
     }
 }

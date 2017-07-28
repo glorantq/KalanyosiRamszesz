@@ -7,9 +7,12 @@ import sx.blah.discord.api.ClientBuilder
 import sx.blah.discord.api.IDiscordClient
 import sx.blah.discord.api.internal.json.objects.EmbedObject
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IGuild
+import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
+import sx.blah.discord.util.RequestBuffer
 
 /**
  * Created by glorantq on 2017. 07. 22..
@@ -98,7 +101,19 @@ class BotUtils {
             val embed: EmbedBuilder = embed(header, author)
             embed.withDescription(extraMessage)
             embed.appendField("Usage", "$prefix${command.commandName} ${command.usage}", false)
-            event.channel.sendMessage(embed.build())
+            BotUtils.sendMessage(embed.build(), event.channel)
+        }
+
+        fun sendMessage(message: EmbedObject, channel: IChannel) {
+            RequestBuffer.request {
+                channel.sendMessage(message)
+            }
+        }
+
+        fun sendMessage(message: String, channel: IChannel) {
+            RequestBuffer.request {
+                channel.sendMessage(message)
+            }
         }
     }
 }

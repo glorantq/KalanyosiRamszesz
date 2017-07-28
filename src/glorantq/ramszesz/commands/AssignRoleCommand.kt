@@ -29,7 +29,7 @@ class AssignRoleCommand : ICommand {
         val embed: EmbedBuilder = BotUtils.embed("Assign Roles", event.author)
         if(!BotUtils.hasPermissions(268435456, event.author, event.guild)) {
             embed.withDescription("You don't have permissions to manage roles!")
-            event.channel.sendMessage(embed.build())
+            BotUtils.sendMessage(embed.build(), event.channel)
             return
         }
 
@@ -91,6 +91,6 @@ class AssignRoleCommand : ICommand {
             embed.withDescription("No roles were assigned to ${mentions[0].mention()}")
         }
 
-        event.channel.sendMessage(embed.build())
+        BotUtils.sendMessage(embed.build(), event.channel)
     }
 }

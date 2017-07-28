@@ -20,6 +20,6 @@ interface IMeme {
         builder.withImage(url)
         builder.withUrl(url)
 
-        event.channel.sendMessage(builder.build())
+        BotUtils.sendMessage(builder.build(), event.channel)
     }
 }

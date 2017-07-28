@@ -55,6 +55,6 @@ class PlayingTextCommand : ICommand {
             event.client.changePlayingText(status)
         }
 
-        event.channel.sendMessage(BotUtils.createSimpleEmbed("Change Playing Text", "Successfully changed playing text to: `$status`", event.author))
+        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Change Playing Text", "Successfully changed playing text to: `$status`", event.author), event.channel)
     }
 }

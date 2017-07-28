@@ -31,6 +31,6 @@ class ConfigDumpCommand : ICommand {
         embedBuilder.appendField("modLogChannel", if(config.modLogChannel != -1L) {event.guild.getChannelByID(config.modLogChannel).name} else {"None"}, true)
         embedBuilder.appendField("logModerations", config.logModerations.toString(), true)
 
-        event.channel.sendMessage(embedBuilder.build())
+        BotUtils.sendMessage(embedBuilder.build(), event.channel)
     }
 }

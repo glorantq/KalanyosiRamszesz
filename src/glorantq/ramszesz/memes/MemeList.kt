@@ -21,6 +21,6 @@ class MemeList : IMeme {
             embed.appendField(meme.name, "Takes `${meme.parameters.size}` parameters", false)
         }
 
-        event.channel.sendMessage(embed.build())
+        BotUtils.sendMessage(embed.build(), event.channel)
     }
 }

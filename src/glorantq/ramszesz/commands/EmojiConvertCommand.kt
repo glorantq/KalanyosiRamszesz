@@ -110,9 +110,9 @@ class EmojiConvertCommand : ICommand {
         }
 
         if(convertedMessage.length > 2000) {
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Emoji Convert", "Sorry ${event.author.name}, but the converted message is more than 2000 characters!", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Emoji Convert", "Sorry ${event.author.name}, but the converted message is more than 2000 characters!", event.author), event.channel)
         } else {
-            event.channel.sendMessage(convertedMessage)
+            BotUtils.sendMessage(convertedMessage, event.channel)
         }
     }
 }

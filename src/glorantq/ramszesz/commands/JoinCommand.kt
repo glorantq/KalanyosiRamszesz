@@ -23,6 +23,6 @@ class JoinCommand : ICommand {
         builder.withUrl(inviteUrl)
         builder.appendField("Use this link to add me to your server!", inviteUrl, false)
 
-        event.channel.sendMessage(builder.build())
+        BotUtils.sendMessage(builder.build(), event.channel)
     }
 }

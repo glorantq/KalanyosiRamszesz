@@ -29,10 +29,10 @@ class RoleIDCommand : ICommand {
 
         val roles: List<IRole> = event.guild.getRolesByName(args[0])
         if(roles.isEmpty()) {
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Role ID", "The role `${args[0]}` is invalid", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Role ID", "The role `${args[0]}` is invalid", event.author), event.channel)
         } else {
             val role: IRole = roles[0]
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Role ID", "The ID of `${role.name}` is `${role.longID}`", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Role ID", "The ID of `${role.name}` is `${role.longID}`", event.author), event.channel)
         }
     }
 }

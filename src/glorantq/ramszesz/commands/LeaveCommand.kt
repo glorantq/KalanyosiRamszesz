@@ -15,7 +15,7 @@ class LeaveCommand : ICommand {
         get() = Permission.OWNER
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
-        event.channel.sendMessage(BotUtils.createSimpleEmbed("Leave", "Goodbye!", event.author))
+        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Leave", "Goodbye!", event.author), event.channel)
         event.client.logout()
         System.exit(2)
     }

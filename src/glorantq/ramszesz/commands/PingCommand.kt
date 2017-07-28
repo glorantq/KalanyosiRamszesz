@@ -15,6 +15,6 @@ class PingCommand : ICommand {
         get() = Permission.USER
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
-        event.channel.sendMessage(BotUtils.createSimpleEmbed("Pong!", args.toString(), event.author))
+        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Pong!", args.toString(), event.author), event.channel)
     }
 }

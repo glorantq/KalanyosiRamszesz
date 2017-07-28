@@ -138,7 +138,7 @@ class Ramszesz private constructor() {
                         event.message.delete()
                     }
                     if (event.channel.isPrivate && !command.availabeInDM) {
-                        event.channel.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I'm sorry ${event.author.mention()}, but this command don't work in DMs!", event.author))
+                        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I'm sorry ${event.author.mention()}, but this command don't work in DMs!", event.author), event.channel)
                         return
                     }
                     if (command.permission == Permission.BOT_OWNER && event.author.longID == 251374678688530433) {
@@ -147,11 +147,11 @@ class Ramszesz private constructor() {
                         if (squad.contains(event.author.longID)) {
                             command.execute(event, args)
                         } else {
-                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Missing Permissions", "I'm sorry ${event.author.mention()}, but only the hyper-extra-super-dev-super-squad members can run this command!", event.author))
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Missing Permissions", "I'm sorry ${event.author.mention()}, but only the hyper-extra-super-dev-super-squad members can run this command!", event.author), event.channel)
                         }
                     } else {
                         if (BotUtils.getPermissionLevel(event.author, event.guild).ordinal < command.permission.ordinal) {
-                            event.channel.sendMessage(BotUtils.createSimpleEmbed("Missing Permissions", "I'm sorry ${event.author.mention()}, but you don't have permissions to run this command", event.author))
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Missing Permissions", "I'm sorry ${event.author.mention()}, but you don't have permissions to run this command", event.author), event.channel)
                         } else {
                             command.execute(event, args)
                         }
@@ -160,7 +160,7 @@ class Ramszesz private constructor() {
                 }
             }
 
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Invalid Command", "The command `$commandBase` is invalid", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Invalid Command", "The command `$commandBase` is invalid", event.author), event.channel)
         }
     }
 

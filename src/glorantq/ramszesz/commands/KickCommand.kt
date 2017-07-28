@@ -22,7 +22,7 @@ class KickCommand: ICommand {
         val embed: EmbedBuilder = BotUtils.embed("Kick", event.author)
         if(!BotUtils.hasPermissions(2, event.author, event.guild)) {
             embed.withDescription("You don't have permissions to kick users!")
-            event.channel.sendMessage(embed.build())
+            BotUtils.sendMessage(embed.build(), event.channel)
             return
         }
 
@@ -30,7 +30,7 @@ class KickCommand: ICommand {
         if (mentions.isEmpty()) {
             embed.withDescription("You need to mention a user!")
             embed.appendField("Usage", "`r!kick @Mention [Reason]`", false)
-            event.channel.sendMessage(embed.build())
+            BotUtils.sendMessage(embed.build(), event.channel)
             return
         }
         val nameLength: Int = mentions[0].name.split(" ").size
@@ -61,6 +61,6 @@ class KickCommand: ICommand {
             embed.appendField(e::class.simpleName, e.message, false)
         }
 
-        event.channel.sendMessage(embed.build())
+        BotUtils.sendMessage(embed.build(), event.channel)
     }
 }

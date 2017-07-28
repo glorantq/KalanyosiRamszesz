@@ -38,6 +38,6 @@ class AvatarCommand : ICommand {
         builder.withDescription("Here's $username's avatar:")
         builder.withImage(avatarUrl)
 
-        event.channel.sendMessage(builder.build())
+        BotUtils.sendMessage(builder.build(), event.channel)
     }
 }

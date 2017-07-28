@@ -29,31 +29,31 @@ class ConvertCommand : ICommand {
             number = number.removePrefix("0X").replace(Regex("[^0-9A-F]"), "")
             try {
                 val output: Int = number.toInt(16)
-                event.channel.sendMessage(BotUtils.createSimpleEmbed("Convert", "`0x${if (number.length > 1) {
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Convert", "`0x${if (number.length > 1) {
                     number.replaceFirst("0", "")
                 } else {
                     number
-                }}` in decimal is `$output`", event.author))
+                }}` in decimal is `$output`", event.author), event.channel)
             } catch (e: NumberFormatException) {
-                event.channel.sendMessage(BotUtils.createSimpleEmbed("Convert", "The number `0x${if (number.length > 1) {
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Convert", "`0x${if (number.length > 1) {
                     number.replaceFirst("0", "")
                 } else {
                     number
-                }}` is too large", event.author))
+                }}` is too large", event.author), event.channel)
                 return
             }
         } else {
             number = number.replace(Regex("[^0-9]"), "")
             if(number.isEmpty()) {
-                event.channel.sendMessage(BotUtils.createSimpleEmbed("Convert", "`${args[0].toUpperCase()}` is not a valid number", event.author))
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Convert", "`${args[0].toUpperCase()}` is not a valid number", event.author), event.channel)
                 return
             }
             if(number.toDouble() > Integer.MAX_VALUE) {
-                event.channel.sendMessage(BotUtils.createSimpleEmbed("Convert", "The number `$number` is too large", event.author))
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Convert", "The number `$number` is too large", event.author), event.channel)
                 return
             }
             val output: String = number.toInt().toString(16).toUpperCase()
-            event.channel.sendMessage(BotUtils.createSimpleEmbed("Convert", "`$number` in hexadecimal is `0x$output`", event.author))
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Convert", "`$number` in hexadecimal is `0x$output`", event.author), event.channel)
         }
     }
 }
