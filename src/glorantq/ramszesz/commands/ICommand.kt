@@ -20,6 +20,8 @@ interface ICommand {
         get() = ""
     val availabeInDM: Boolean
         get() = false
+    val disabled: Boolean
+        get() = false
 
     fun execute(event: MessageReceivedEvent, args: List<String>)
 }

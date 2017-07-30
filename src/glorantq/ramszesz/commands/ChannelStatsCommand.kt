@@ -5,6 +5,11 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
+import java.time.*
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 /**
@@ -18,8 +23,33 @@ class ChannelStatsCommand : ICommand {
     override val permission: Permission
         get() = Permission.ADMIN
 
+    private val timeouts: HashMap<Long, Long> = HashMap()
+
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
+        val nextExecute: Long  = timeouts[event.guild.longID] ?: 0
+
+        if(nextExecute > System.currentTimeMillis()) {
+            val embed: EmbedBuilder = BotUtils.embed("Channel Statistics", event.author)
+            embed.withDescription("Due to this command requiring more computational power, it has been given a limit of `1 execution per 10 minutes per guild`")
+
+
+            val dateTime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(nextExecute), ZoneId.systemDefault())
+            val formatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)
+            val diff: Date = Date(nextExecute - System.currentTimeMillis())
+            val calendar: Calendar = Calendar.getInstance()
+            calendar.time = diff
+
+            embed.appendField("Next execution available at", "${formatter.format(dateTime)} (${calendar.get(Calendar.MINUTE)} minutes ${calendar.get(Calendar.SECOND)} seconds from now)", false)
+
+            BotUtils.sendMessage(embed.build(), event.channel)
+            return
+        } else {
+            timeouts.put(event.guild.longID, System.currentTimeMillis() + 600000)
+        }
+
         thread(name = "ChannelStatsCheck-${event.channel.longID}-${System.nanoTime()}", isDaemon = true, start = true) {
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Channel Statistics", "Calculating statistics for ${event.channel.mention()}, this may take a while...", event.author), event.channel)
+
             val messageCounts: HashMap<Long, Int> = HashMap()
             val history: List<IMessage> = event.channel.getMessageHistory(5000)
 

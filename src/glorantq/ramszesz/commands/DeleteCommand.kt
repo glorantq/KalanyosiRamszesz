@@ -46,8 +46,8 @@ class DeleteCommand : ICommand {
             }
 
 
-            if (toDelete > 501) {
-                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Delete", "Only a maximum of 500 messages can be deleted!", event.author), event.channel)
+            if (toDelete > 101) {
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Delete", "Only a maximum of 100 messages can be deleted!", event.author), event.channel)
                 return
             } else if(toDelete < 2) {
                 BotUtils.sendMessage(BotUtils.createSimpleEmbed("Delete", "You must provide at least one message to delete!", event.author), event.channel)
@@ -88,8 +88,8 @@ class DeleteCommand : ICommand {
                 return
             }
 
-            if (toDelete > 501) {
-                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Delete", "Only a maximum of 500 messages can be deleted!", event.author), event.channel)
+            if (toDelete > 101) {
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Delete", "Only a maximum of 100 messages can be deleted!", event.author), event.channel)
                 return
             } else if(toDelete < 1 + if (mentions[0].longID == event.author.longID) { 1 } else { 0 }) {
                 BotUtils.sendMessage(BotUtils.createSimpleEmbed("Delete", "You must provide at least one message to delete!", event.author), event.channel)

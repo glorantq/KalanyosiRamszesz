@@ -136,6 +136,10 @@ class Ramszesz private constructor() {
 
             for (command: ICommand in commands) {
                 if (command.commandName.equals(commandBase, true) || command.aliases.contains(commandBase.toLowerCase())) {
+                    if(command.disabled) {
+                        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I'm sorry ${event.author.mention()}, but this command is disabled!", event.author), event.channel)
+                        return
+                    }
                     if (!event.channel.isPrivate && getConfigForGuild(event.guild.stringID).deleteCommands) {
                         event.message.delete()
                     }
