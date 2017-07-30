@@ -12,5 +12,7 @@
     <orderEntry type="library" name="logback-core-1.2.3" level="project" />
     <orderEntry type="library" name="logback-classic-1.2.3" level="project" />
     <orderEntry type="library" name="com.github.salomonbrys.kotson:kotson:2.5.0" level="project" />
+    <orderEntry type="library" name="com.cloudinary:cloudinary-http44:1.14.0" level="project" />
+    <orderEntry type="library" name="com.squareup.okhttp3:okhttp:3.3.1" level="project" />
   </component>
 </module>
