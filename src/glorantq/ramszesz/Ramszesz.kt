@@ -2,6 +2,7 @@ package glorantq.ramszesz
 
 import glorantq.ramszesz.commands.*
 import glorantq.ramszesz.config.ConfigFile
+import glorantq.ramszesz.utils.BotUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import sx.blah.discord.api.IDiscordClient
@@ -9,7 +10,6 @@ import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
@@ -68,6 +68,7 @@ class Ramszesz private constructor() {
         commands.add(MemeCommand())
         commands.add(PasswordCommand())
         commands.add(GuildListCommand())
+        commands.add(DictionaryCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()

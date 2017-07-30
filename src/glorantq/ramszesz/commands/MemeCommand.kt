@@ -1,6 +1,6 @@
 package glorantq.ramszesz.commands
 
-import glorantq.ramszesz.BotUtils
+import glorantq.ramszesz.utils.BotUtils
 import glorantq.ramszesz.memes.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

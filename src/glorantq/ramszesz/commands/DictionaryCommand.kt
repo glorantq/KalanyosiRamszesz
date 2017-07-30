@@ -1,0 +1,78 @@
+package glorantq.ramszesz.commands
+
+import glorantq.ramszesz.utils.BotUtils
+import glorantq.ramszesz.utils.DictionaryResult
+import okhttp3.*
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import java.io.IOException
+import com.github.salomonbrys.kotson.*
+import com.google.gson.Gson
+import glorantq.ramszesz.utils.tryParseInt
+import sx.blah.discord.util.EmbedBuilder
+
+/**
+ * Created by glora on 2017. 07. 28..
+ */
+class DictionaryCommand : ICommand {
+    override val commandName: String
+        get() = "dictionary"
+    override val description: String
+        get() = "Look up a word in the dictionary"
+    override val permission: Permission
+        get() = Permission.USER
+
+    val httpClient: OkHttpClient by lazy { OkHttpClient.Builder().build() }
+
+    override fun execute(event: MessageReceivedEvent, args: List<String>) {
+        if (args.isEmpty()) {
+            BotUtils.sendUsageEmbed("You ned to specify a word!", "Dictionary", event.author, event, this)
+            return
+        }
+
+        var results: Int = 3
+        if(args.size > 1) {
+            results = args[1].tryParseInt(3)
+        }
+
+        if(results == 0) {
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "0 definitions aren't useful", event.author), event.channel)
+            return
+        }
+
+        if(results < 0) {
+            results *= -1
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "The number `$results` is negative, it has been changed to `$results`", event.author), event.channel)
+        }
+
+        if(results > 15) {
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "The number `$results` is too large", event.author), event.channel)
+            return
+        }
+
+        val url: String = "http://api.wordnik.com/v4/word.json/${args[0]}/definitions?limit=$results&includeRelated=false&sourceDictionaries=ahd%2Ccentury&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"
+
+        val request: Request = Request.Builder().url(url).get().build()
+        httpClient.newCall(request).enqueue(object : Callback {
+            override fun onFailure(p0: Call?, p1: IOException?) {
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "Failed to look up `${args[0]}` in the dictionary because @glorantq can't code!", event.author), event.channel)
+            }
+
+            override fun onResponse(p0: Call?, p1: Response?) {
+                if(p1 == null) {
+                    BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "Failed to look up `${args[0]}` in the dictionary because @glorantq can't code!", event.author), event.channel)
+                    return
+                }
+                val results: List<DictionaryResult> = Gson().fromJson<List<DictionaryResult>>(p1.body().string())
+
+                val embed: EmbedBuilder = BotUtils.embed("Dictionary", event.author)
+                embed.withDescription("Definitions for \"${args[0]}\"")
+
+                for(result: DictionaryResult in results) {
+                    embed.appendField("From ${result.sourceDictionary}", "${result.text}\n\n`Data sourced ${result.attributionText}`", false)
+                }
+
+                BotUtils.sendMessage(embed.build(), event.channel)
+            }
+        })
+    }
+}

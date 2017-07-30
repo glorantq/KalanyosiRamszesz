@@ -1,11 +1,9 @@
 package glorantq.ramszesz.memes
 
 import com.cloudinary.utils.ObjectUtils
-import glorantq.ramszesz.BotUtils
 import glorantq.ramszesz.cloudinary
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IUser
-import sx.blah.discord.util.EmbedBuilder
 import java.awt.Graphics
 import java.awt.image.BufferedImage
 import java.io.File

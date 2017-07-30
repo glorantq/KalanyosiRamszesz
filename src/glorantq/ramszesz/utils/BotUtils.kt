@@ -1,5 +1,6 @@
-package glorantq.ramszesz
+package glorantq.ramszesz.utils
 
+import glorantq.ramszesz.Ramszesz
 import glorantq.ramszesz.commands.ICommand
 import glorantq.ramszesz.commands.Permission
 import glorantq.ramszesz.config.ConfigFile
@@ -9,7 +10,6 @@ import sx.blah.discord.api.internal.json.objects.EmbedObject
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IGuild
-import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
 import sx.blah.discord.util.RequestBuffer
@@ -85,7 +85,7 @@ class BotUtils {
 
         fun embed(header: String, author: IUser): EmbedBuilder {
             val builder: EmbedBuilder = EmbedBuilder()
-            builder.withColor(BotUtils.embedColor)
+            builder.withColor(embedColor)
             builder.withAuthorName(header)
             builder.withFooterText("Command ran by @${author.name}")
             builder.withFooterIcon(author.avatarURL)
@@ -100,8 +100,8 @@ class BotUtils {
         fun sendUsageEmbed(extraMessage: String, header: String, author: IUser, event: MessageReceivedEvent, command: ICommand) {
             val embed: EmbedBuilder = embed(header, author)
             embed.withDescription(extraMessage)
-            embed.appendField("Usage", "$prefix${command.commandName} ${command.usage}", false)
-            BotUtils.sendMessage(embed.build(), event.channel)
+            embed.appendField("Usage", "${prefix}${command.commandName} ${command.usage}", false)
+            sendMessage(embed.build(), event.channel)
         }
 
         fun sendMessage(message: EmbedObject, channel: IChannel) {

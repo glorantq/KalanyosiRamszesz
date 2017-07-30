@@ -1,6 +1,6 @@
 package glorantq.ramszesz.commands
 
-import glorantq.ramszesz.BotUtils
+import glorantq.ramszesz.utils.BotUtils
 import glorantq.ramszesz.Ramszesz
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 
