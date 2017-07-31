@@ -27,14 +27,9 @@ class NumberOneMeme : IMeme {
     override fun execute(event: MessageReceivedEvent) {
         val pictures: ArrayList<BufferedImage> = arrayListOf()
 
-        for(i: Int in 0..3) {
-            val user: IUser = parameters[i].value as IUser
-            val urlConnection: URLConnection = URL(user.avatarURL.replace("webp", "png")).openConnection()
-            urlConnection.setRequestProperty("User-Agent", "Kalányosi Ramszesz/1.0")
-            urlConnection.connect()
-            println(urlConnection.url)
-            pictures.add(ImageIO.read(urlConnection.getInputStream()))
-        }
+        (0..3)
+                .map { parameters[it].value as IUser }
+                .mapTo(pictures) { downloadProfileImage(it) }
 
         val background: BufferedImage = ImageIO.read(File("./assets/numberone.jpg"))
         val combined: BufferedImage = BufferedImage(background.width, background.height, BufferedImage.TYPE_INT_RGB)

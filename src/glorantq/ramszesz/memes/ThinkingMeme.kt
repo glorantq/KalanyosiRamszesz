@@ -21,11 +21,7 @@ class ThinkingMeme : IMeme {
 
     override fun execute(event: MessageReceivedEvent) {
         val user: IUser = parameters[0].value as IUser
-        val urlConnection: URLConnection = URL(user.avatarURL.replace("webp", "png")).openConnection()
-        urlConnection.setRequestProperty("User-Agent", "Kalányosi Ramszesz/1.0")
-        urlConnection.connect()
-        println(urlConnection.url)
-        val profileImage: BufferedImage = ImageIO.read(urlConnection.getInputStream())
+        val profileImage: BufferedImage = downloadProfileImage(user)
 
         val thinking: BufferedImage = ImageIO.read(File("./assets/thinking.png"))
         val combined: BufferedImage = BufferedImage(profileImage.width, profileImage.height, BufferedImage.TYPE_INT_ARGB)

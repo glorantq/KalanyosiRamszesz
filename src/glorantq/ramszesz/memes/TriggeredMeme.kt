@@ -4,6 +4,7 @@ import com.cloudinary.utils.ObjectUtils
 import glorantq.ramszesz.cloudinary
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IUser
+import java.awt.Color
 import java.awt.Graphics
 import java.awt.image.BufferedImage
 import java.io.File
@@ -21,11 +22,7 @@ class TriggeredMeme : IMeme {
 
     override fun execute(event: MessageReceivedEvent) {
         val user: IUser = parameters[0].value as IUser
-        val urlConnection: URLConnection = URL(user.avatarURL.replace("webp", "png")).openConnection()
-        urlConnection.setRequestProperty("User-Agent", "Kalányosi Ramszesz/1.0")
-        urlConnection.connect()
-        println(urlConnection.url)
-        val profileImage: BufferedImage = ImageIO.read(urlConnection.getInputStream())
+        val profileImage: BufferedImage = downloadProfileImage(user)
         val triggered: BufferedImage = ImageIO.read(File("./assets/triggered.jpg"))
 
         val ratio: Float = (triggered.width.toFloat() / triggered.height.toFloat())

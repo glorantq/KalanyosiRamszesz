@@ -79,6 +79,20 @@ class BotUtils {
             }
         }
 
+        fun getSpecialPermissions(user: IUser): List<Permission> {
+            val permissions: ArrayList<Permission> = ArrayList()
+
+            if(Ramszesz.instance.squad.contains(user.longID)) {
+                permissions.add(Permission.SQUAD)
+            }
+
+            if(user.longID == 251374678688530433) {
+                permissions.add(Permission.BOT_OWNER)
+            }
+
+            return permissions
+        }
+
         fun createSimpleEmbed(header: String, content: String, author: IUser): EmbedObject {
             return embed(header, author).withDescription(content).build()
         }

@@ -2,14 +2,16 @@ package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.utils.BotUtils
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.obj.IChannel
 import sx.blah.discord.handle.obj.IMessage
 import sx.blah.discord.handle.obj.IUser
 import sx.blah.discord.util.EmbedBuilder
-import java.time.*
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 /**
@@ -22,7 +24,8 @@ class ChannelStatsCommand : ICommand {
         get() = "Check statistics for a channel"
     override val permission: Permission
         get() = Permission.ADMIN
-
+    override val usage: String
+        get() = "[#Mention]"
     private val timeouts: HashMap<Long, Long> = HashMap()
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
@@ -30,7 +33,7 @@ class ChannelStatsCommand : ICommand {
 
         if(nextExecute > System.currentTimeMillis()) {
             val embed: EmbedBuilder = BotUtils.embed("Channel Statistics", event.author)
-            embed.withDescription("Due to this command requiring more computational power, it has been given a limit of `1 execution per 10 minutes per guild`")
+            embed.withDescription("Due to this command requiring more computational power, it has been given a limit of `1 execution per 15 minutes per guild`")
 
 
             val dateTime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(nextExecute), ZoneId.systemDefault())
@@ -44,20 +47,26 @@ class ChannelStatsCommand : ICommand {
             BotUtils.sendMessage(embed.build(), event.channel)
             return
         } else {
-            timeouts.put(event.guild.longID, System.currentTimeMillis() + 600000)
+            timeouts.put(event.guild.longID, System.currentTimeMillis() + 900000)
         }
 
         thread(name = "ChannelStatsCheck-${event.channel.longID}-${System.nanoTime()}", isDaemon = true, start = true) {
-            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Channel Statistics", "Calculating statistics for ${event.channel.mention()}, this may take a while...", event.author), event.channel)
+            val channel: IChannel = if(event.message.channelMentions.isEmpty()) {
+                event.channel
+            } else {
+                event.message.channelMentions[0]
+            }
+
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Channel Statistics", "Calculating statistics for ${channel.mention()}, this may take a while...", event.author), event.channel)
 
             val messageCounts: HashMap<Long, Int> = HashMap()
-            val history: List<IMessage> = event.channel.getMessageHistory(5000)
+            val history: List<IMessage> = channel.getMessageHistory(5000)
 
             history.map { it.author }
                     .forEach {
                         if (messageCounts.containsKey(it.longID)) {
                             messageCounts[it.longID] = messageCounts[it.longID]!!.plus(1)
-                        } else {
+                        } else if(!it.isBot) {
                             messageCounts.put(it.longID, 1)
                         }
                     }
@@ -65,7 +74,10 @@ class ChannelStatsCommand : ICommand {
             val finalMap = messageCounts.toSortedMap(Comparator<Long> { o1, o2 -> compareValues(messageCounts[o2], messageCounts[o1]) })
 
             val embed: EmbedBuilder = BotUtils.embed("Channel Statistics", event.author)
-            embed.withDescription("Channel statistics for ${event.channel.mention()} (Total: ${event.channel.fullMessageHistory.size} messages, calculation limited to 5000 messages)")
+            embed.withDescription(
+                    "Channel statistics for ${channel.mention()}\n" +
+                    "**${channel.fullMessageHistory.size}** messages, calculation limited to 5000 messages\n" +
+                    "**${messageCounts.size}** users have talked recently")
 
             var added: Int = 0
             for((key, value) in finalMap) {
