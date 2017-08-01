@@ -17,22 +17,26 @@ class HelpCommand : ICommand {
         get() = Permission.NONE
     override val usage: String
         get() = "[Command]"
-    override val availabeInDM: Boolean
+    override val availableInDM: Boolean
         get() = true
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val embedBuilder: EmbedBuilder = BotUtils.embed("ICommand Help", event.author)
 
+        val commandHelp: StringBuilder = StringBuilder()
         if(args.isEmpty()) {
             Ramszesz.instance.commands
                     .filterNot { it.undocumented }
-                    .forEach { embedBuilder.appendField(it.commandName, it.description, false) }
+                    .forEach { commandHelp.append("**${it.commandName}**\n  ${it.description}\n\n") }
 
+            embedBuilder.withDescription(commandHelp.toString())
         } else {
             val commandName: String = args[0]
             if(commandName.equals("document-all", true)) {
                 Ramszesz.instance.commands
-                        .forEach { embedBuilder.appendField(it.commandName, it.description, false) }
+                        .forEach { commandHelp.append("**${it.commandName}**\n  ${it.description}\n\n") }
+
+                embedBuilder.withDescription(commandHelp.toString())
             } else {
                 val command: ICommand? = Ramszesz.instance.commands.firstOrNull { it.commandName.equals(commandName, true) }
 
@@ -43,7 +47,7 @@ class HelpCommand : ICommand {
                     embedBuilder.appendField("Description", command.description, false)
                     embedBuilder.appendField("Usage", "${BotUtils.prefix}${command.commandName} ${command.usage}", false)
                     embedBuilder.appendField("Extra Help", command.extendedHelp, false)
-                    embedBuilder.appendField("Does it work in DMs?", if(command.availabeInDM) { "Yes" } else { "No" }, false)
+                    embedBuilder.appendField("Does it work in DMs?", if(command.availableInDM) { "Yes" } else { "No" }, false)
 
                     if (command.aliases.isNotEmpty()) {
                         val builder: StringBuilder = StringBuilder()

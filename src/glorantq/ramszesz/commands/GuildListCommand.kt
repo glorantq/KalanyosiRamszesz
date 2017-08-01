@@ -16,7 +16,7 @@ class GuildListCommand : ICommand {
         get() = Permission.USER
     override val aliases: List<String>
         get() = listOf("guilds")
-    override val availabeInDM: Boolean
+    override val availableInDM: Boolean
         get() = true
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {

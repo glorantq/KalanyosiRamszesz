@@ -22,7 +22,7 @@ class PasswordCommand : ICommand {
         get() = listOf("pass", "passgen", "pwgen")
     override val usage: String
         get() = "[Length]"
-    override val availabeInDM: Boolean
+    override val availableInDM: Boolean
         get() = true
 
     val characters: CharArray = charArrayOf(

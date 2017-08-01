@@ -18,7 +18,7 @@ interface ICommand {
     val permission: Permission
     val usage: String
         get() = ""
-    val availabeInDM: Boolean
+    val availableInDM: Boolean
         get() = false
     val disabled: Boolean
         get() = false

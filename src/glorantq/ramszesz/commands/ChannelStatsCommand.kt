@@ -26,6 +26,7 @@ class ChannelStatsCommand : ICommand {
         get() = Permission.ADMIN
     override val usage: String
         get() = "[#Mention]"
+
     private val timeouts: HashMap<Long, Long> = HashMap()
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
@@ -66,7 +67,7 @@ class ChannelStatsCommand : ICommand {
                     .forEach {
                         if (messageCounts.containsKey(it.longID)) {
                             messageCounts[it.longID] = messageCounts[it.longID]!!.plus(1)
-                        } else if(!it.isBot) {
+                        } else {
                             messageCounts.put(it.longID, 1)
                         }
                     }

@@ -29,27 +29,27 @@ class DictionaryCommand : ICommand {
             return
         }
 
-        var results: Int = 3
+        var limit: Int = 3
         if(args.size > 1) {
-            results = args[1].tryParseInt(3)
+            limit = args[1].tryParseInt(3)
         }
 
-        if(results == 0) {
+        if(limit == 0) {
             BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "0 definitions aren't useful", event.author), event.channel)
             return
         }
 
-        if(results < 0) {
-            results *= -1
-            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "The number `$results` is negative, it has been changed to `$results`", event.author), event.channel)
+        if(limit < 0) {
+            limit *= -1
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "The number `$limit` is negative, it has been changed to `$limit`", event.author), event.channel)
         }
 
-        if(results > 15) {
-            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "The number `$results` is too large", event.author), event.channel)
+        if(limit > 15) {
+            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "The number `$limit` is too large", event.author), event.channel)
             return
         }
 
-        val url: String = "http://api.wordnik.com/v4/word.json/${args[0]}/definitions?limit=$results&includeRelated=false&sourceDictionaries=ahd%2Ccentury&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"
+        val url: String = "http://api.wordnik.com/v4/word.json/${args[0]}/definitions?limit=$limit&includeRelated=false&sourceDictionaries=ahd%2Ccentury&useCanonical=false&includeTags=false&api_key=a2a73e7b926c924fad7001ca3111acd55af2ffabf50eb4ae5"
 
         val request: Request = Request.Builder().url(url).get().build()
         httpClient.newCall(request).enqueue(object : Callback {

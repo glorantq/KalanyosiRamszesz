@@ -72,6 +72,7 @@ class Ramszesz private constructor() {
         commands.add(ChannelStatsCommand())
         commands.add(UserInfoCommand())
         commands.add(BotStatsCommand())
+        commands.add(TestEmbedCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()
@@ -100,7 +101,7 @@ class Ramszesz private constructor() {
                             append(" users")
                         }
 
-                        else -> "definitely not with Platin"
+                        else -> "Try r!help"
                     })
 
                     logger.info("Updated playing text to id: $currentText")
@@ -145,7 +146,7 @@ class Ramszesz private constructor() {
                     if (!event.channel.isPrivate && getConfigForGuild(event.guild.stringID).deleteCommands) {
                         event.message.delete()
                     }
-                    if (event.channel.isPrivate && !command.availabeInDM) {
+                    if (event.channel.isPrivate && !command.availableInDM) {
                         BotUtils.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I'm sorry ${event.author.mention()}, but this command don't work in DMs!", event.author), event.channel)
                         return
                     }

@@ -20,7 +20,7 @@ class EmojiConvertCommand : ICommand {
         get() = Permission.USER
     override val usage: String
         get() = "Message"
-    override val availabeInDM: Boolean
+    override val availableInDM: Boolean
         get() = true
 
     val conversionMap: HashMap<String, String> = HashMap()

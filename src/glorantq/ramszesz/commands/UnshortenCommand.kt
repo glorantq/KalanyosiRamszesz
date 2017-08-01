@@ -26,7 +26,7 @@ class UnshortenCommand : ICommand {
         get() = listOf("urlreveal", "linkexpand", "expand")
     override val usage: String
         get() = "URL"
-    override val availabeInDM: Boolean
+    override val availableInDM: Boolean
         get() = true
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {

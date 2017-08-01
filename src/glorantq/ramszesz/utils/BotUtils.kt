@@ -20,7 +20,7 @@ import sx.blah.discord.util.RequestBuffer
 class BotUtils {
     companion object {
         val prefix: String = "r!"
-        val embedColor: Int = 13840175
+        val embedColor: Int = 0xFF8F00
 
         fun buildDiscordClient(token: String): IDiscordClient {
             return ClientBuilder().withToken(token).withRecommendedShardCount().build()

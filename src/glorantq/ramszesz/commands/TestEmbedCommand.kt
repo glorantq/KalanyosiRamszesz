@@ -1,28 +1,25 @@
 package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.utils.BotUtils
-import glorantq.ramszesz.inviteUrl
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.util.EmbedBuilder
 
-/**
- * Created by glora on 2017. 07. 23..
- */
-class JoinCommand : ICommand {
+class TestEmbedCommand : ICommand {
     override val commandName: String
-        get() = "invite"
+        get() = "testembed"
     override val description: String
-        get() = "Get a link to invite this bot to your server"
+        get() = "Send a test embed"
     override val permission: Permission
         get() = Permission.NONE
+    override val undocumented: Boolean
+        get() = true
     override val availableInDM: Boolean
         get() = true
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
-        val builder: EmbedBuilder = BotUtils.embed("Invite", event.author)
-        builder.withUrl(inviteUrl)
-        builder.appendField("Use this link to add me to your server!", inviteUrl, false)
-
-        BotUtils.sendMessage(builder.build(), event.channel)
+        val embed: EmbedBuilder = BotUtils.embed("Test Embed", event.author)
+        embed.withDescription("This is a test embed!")
+        embed.appendField("Arguments", args.toString(), false)
+        BotUtils.sendMessage(embed.build(), event.channel)
     }
 }
