@@ -73,6 +73,7 @@ class Ramszesz private constructor() {
         commands.add(UserInfoCommand())
         commands.add(BotStatsCommand())
         commands.add(TestEmbedCommand())
+        commands.add(CatCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()

@@ -21,7 +21,7 @@ class UserInfoCommand : ICommand {
     override val description: String
         get() = "Shows information about a user"
     override val permission: Permission
-        get() = Permission.ADMIN
+        get() = Permission.USER
     override val usage: String
         get() = "@Mention"
     override val aliases: List<String>
@@ -70,7 +70,6 @@ class UserInfoCommand : ICommand {
         }
 
         embed.appendField("Known Nicknames", nicknames, false)
-        embed.appendField("Servers", "${user.shard.guilds.size} on this shard", false)
 
         val presence: String = buildString {
             val friendlyText: String = when (user.presence.status) {
