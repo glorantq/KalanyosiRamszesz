@@ -145,7 +145,11 @@ class Ramszesz private constructor() {
                         return
                     }
                     if (!event.channel.isPrivate && getConfigForGuild(event.guild.stringID).deleteCommands) {
-                        event.message.delete()
+                        try {
+                            event.message.delete()
+                        } catch(e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
                     if (event.channel.isPrivate && !command.availableInDM) {
                         BotUtils.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I'm sorry ${event.author.mention()}, but this command don't work in DMs!", event.author), event.channel)

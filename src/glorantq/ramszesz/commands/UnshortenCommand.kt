@@ -30,33 +30,36 @@ class UnshortenCommand : ICommand {
         get() = true
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
-        if(args.isEmpty()) {
+        if (args.isEmpty()) {
             BotUtils.sendUsageEmbed("You need to specify a URL!", "Unshorten", event.author, event, this)
             return
         }
 
-        val message: IMessage = event.channel.sendMessage(BotUtils.createSimpleEmbed("Unshorten", "Checking that link for you...", event.author))
+        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Unshorten", "Checking that link for you...", event.author), event.channel) {
+            message ->
+            run {
+                thread(isDaemon = true) {
+                    var shortUrl: String = args[0]
+                    if (!shortUrl.startsWith("http://") && !shortUrl.startsWith("https://")) shortUrl = "http://$shortUrl"
 
-        thread(isDaemon = true) {
-            var shortUrl: String = args[0]
-            if(!shortUrl.startsWith("http://") && !shortUrl.startsWith("https://")) shortUrl = "http://$shortUrl"
+                    val url = URL(shortUrl)
+                    val httpURLConnection = url.openConnection(Proxy.NO_PROXY) as HttpURLConnection
 
-            val url = URL(shortUrl)
-            val httpURLConnection = url.openConnection(Proxy.NO_PROXY) as HttpURLConnection
+                    httpURLConnection.instanceFollowRedirects = false
 
-            httpURLConnection.instanceFollowRedirects = false
+                    val expandedURL = httpURLConnection.getHeaderField("Location")
+                    httpURLConnection.disconnect()
 
-            val expandedURL = httpURLConnection.getHeaderField("Location")
-            httpURLConnection.disconnect()
-
-            val builder: EmbedBuilder = BotUtils.embed("Unshorten", event.author)
-            builder.withDescription("Results are in!")
-            if(expandedURL == null || expandedURL.isEmpty()) {
-                builder.appendField("Failed to contact URL", "$shortUrl is unreachable or is not a short link!", false)
-            } else {
-                builder.appendField("$shortUrl points to:", expandedURL, false)
+                    val builder: EmbedBuilder = BotUtils.embed("Unshorten", event.author)
+                    builder.withDescription("Results are in!")
+                    if (expandedURL == null || expandedURL.isEmpty()) {
+                        builder.appendField("Failed to contact URL", "$shortUrl is unreachable or is not a short link!", false)
+                    } else {
+                        builder.appendField("$shortUrl points to:", expandedURL, false)
+                    }
+                    message.edit(builder.build())
+                }
             }
-            message.edit(builder.build())
         }
     }
 }

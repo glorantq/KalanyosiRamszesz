@@ -36,7 +36,7 @@ class AvatarCommand : ICommand {
 
         val builder: EmbedBuilder = BotUtils.embed("Avatar", event.author)
         builder.withDescription("Here's $username's avatar:")
-        builder.withImage(avatarUrl)
+        builder.withImage("$avatarUrl?size=2048")
 
         BotUtils.sendMessage(builder.build(), event.channel)
     }

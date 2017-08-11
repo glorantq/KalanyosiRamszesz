@@ -37,7 +37,8 @@ class UserInfoCommand : ICommand {
         val embed: EmbedBuilder = BotUtils.embed("User Info", event.author)
 
         embed.setLenient(true)
-        embed.withDescription("User info for ${user.mention()}")
+        embed.withDescription("User info for ${user.name}${if(user.isBot) { " <:bot:342101758895456256>" } else { "" }}")
+        embed.withThumbnail("${user.avatarURL}?size=2048")
         embed.appendField("Name", "@${user.name}#${user.discriminator}", true)
         embed.appendField("ID", user.longID.toString(), true)
 
@@ -73,19 +74,19 @@ class UserInfoCommand : ICommand {
 
         val presence: String = buildString {
             val friendlyText: String = when (user.presence.status) {
-                StatusType.ONLINE -> "Online"
-                StatusType.IDLE -> "Idle"
-                StatusType.DND -> "Do not Disturb"
+                StatusType.ONLINE -> "<:status_online:342105739575427073> Online"
+                StatusType.IDLE -> "<:status_idle:342105880067833857> Idle"
+                StatusType.DND -> "<:status_dnd:342106090470768661> Do not Disturb"
                 StatusType.STREAMING -> "Streaming"
-                StatusType.UNKNOWN -> "Unknown"
-                StatusType.OFFLINE -> "Offline"
-                null -> "Unknown"
+                StatusType.UNKNOWN -> "<:status_invisible:342106101464039434> Unknown"
+                StatusType.OFFLINE -> "<:status_invisible:342106101464039434> Offline"
+                null -> "<:status_invisible:342106101464039434> Unknown"
             }
 
             val playingText: String = if (user.presence.status == StatusType.STREAMING) {
-                ", Streaming ${user.presence.playingText.get()} at ${user.presence.streamingUrl}"
+                " ${user.presence.playingText.get()} at ${user.presence.streamingUrl.get()}"
             } else if(user.presence.status == StatusType.ONLINE || user.presence.status == StatusType.IDLE || user.presence.status == StatusType.DND) {
-                if(user.presence.playingText.isPresent) { ", Playing " + user.presence.playingText.get() } else { "" }
+                if(user.presence.playingText.isPresent) { ", Playing **" + user.presence.playingText.get() + "**" } else { "" }
             } else {
                 ""
             }

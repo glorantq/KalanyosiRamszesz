@@ -29,7 +29,7 @@ interface IMeme {
     }
 
     fun downloadProfileImage(user: IUser): BufferedImage {
-        val urlConnection: URLConnection = URL(user.avatarURL.replace("webp", "png")).openConnection()
+        val urlConnection: URLConnection = URL("${user.avatarURL.replace("webp", "png")}?size=2048").openConnection()
         urlConnection.setRequestProperty("User-Agent", "Kalányosi Ramszesz/1.0")
         urlConnection.connect()
         return ImageIO.read(urlConnection.getInputStream())
