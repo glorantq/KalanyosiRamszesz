@@ -10,7 +10,6 @@ import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
-import kotlin.collections.ArrayList
 import kotlin.concurrent.thread
 
 /**
@@ -74,6 +73,7 @@ class Ramszesz private constructor() {
         commands.add(BotStatsCommand())
         commands.add(TestEmbedCommand())
         commands.add(CatCommand())
+        commands.add(OsuCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()
@@ -82,6 +82,7 @@ class Ramszesz private constructor() {
     @EventSubscriber
     fun onBotReady(event: ReadyEvent) {
         logger.info("Bot ready with ${configs.size} configs loaded!")
+        event.client.online()
 
         thread(isDaemon = true, name = "PlayingStatusUpdater", start = true) {
             var currentText: Int = 0
@@ -106,7 +107,7 @@ class Ramszesz private constructor() {
                     })
 
                     logger.info("Updated playing text to id: $currentText")
-                    if (++currentText > 3) currentText = 0
+                    if (++currentText > 2) currentText = 0
                     Thread.sleep(10 * 1000)
                 }
             }
@@ -144,11 +145,16 @@ class Ramszesz private constructor() {
                         BotUtils.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I'm sorry ${event.author.mention()}, but this command is disabled!", event.author), event.channel)
                         return
                     }
+                    if(command.botPermissions != 0x0 && !BotUtils.hasPermissions(command.botPermissions, event.client.ourUser, event.guild)) {
+                        BotUtils.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I'm sorry ${event.author.mention()}, but I don't have permissions to do this!", event.author), event.channel)
+                        return
+                    }
                     if (!event.channel.isPrivate && getConfigForGuild(event.guild.stringID).deleteCommands) {
                         try {
                             event.message.delete()
                         } catch(e: Exception) {
-                            e.printStackTrace()
+                            getConfigForGuild(event.guild.stringID).deleteCommands = false
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I have set the value of `deleteCommands` to `false`, as I don't have permission to delete messages!", event.author), event.channel)
                         }
                     }
                     if (event.channel.isPrivate && !command.availableInDM) {

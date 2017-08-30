@@ -17,6 +17,8 @@ class KickCommand: ICommand {
         get() = "Kick a user. Mention a user and optionally specify a reason"
     override val aliases: List<String>
         get() = super.aliases
+    override val botPermissions: Int
+        get() = 0x2
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val embed: EmbedBuilder = BotUtils.embed("Kick", event.author)

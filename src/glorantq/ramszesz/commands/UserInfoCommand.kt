@@ -1,6 +1,7 @@
 package glorantq.ramszesz.commands
 
 import glorantq.ramszesz.utils.BotUtils
+import org.apache.commons.lang3.text.WordUtils
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IGuild
 import sx.blah.discord.handle.obj.IRole
@@ -77,14 +78,14 @@ class UserInfoCommand : ICommand {
                 StatusType.ONLINE -> "<:status_online:342105739575427073> Online"
                 StatusType.IDLE -> "<:status_idle:342105880067833857> Idle"
                 StatusType.DND -> "<:status_dnd:342106090470768661> Do not Disturb"
-                StatusType.STREAMING -> "Streaming"
+                StatusType.STREAMING -> "<:status_streaming:345337837236912129> Streaming"
                 StatusType.UNKNOWN -> "<:status_invisible:342106101464039434> Unknown"
                 StatusType.OFFLINE -> "<:status_invisible:342106101464039434> Offline"
                 null -> "<:status_invisible:342106101464039434> Unknown"
             }
 
             val playingText: String = if (user.presence.status == StatusType.STREAMING) {
-                " ${user.presence.playingText.get()} at ${user.presence.streamingUrl.get()}"
+                " **${user.presence.playingText.get()}** at ${user.presence.streamingUrl.get()}"
             } else if(user.presence.status == StatusType.ONLINE || user.presence.status == StatusType.IDLE || user.presence.status == StatusType.DND) {
                 if(user.presence.playingText.isPresent) { ", Playing **" + user.presence.playingText.get() + "**" } else { "" }
             } else {
@@ -97,6 +98,20 @@ class UserInfoCommand : ICommand {
 
         embed.appendField("Presence", presence, false)
         embed.appendField("Is a bot?", if(user.isBot) { "Yes" } else { "No" }, false)
+
+        val specialPermissions: List<Permission> = BotUtils.getSpecialPermissions(user)
+        embed.appendField("Special Permissions", buildString {
+            if(specialPermissions.isEmpty()) {
+                append("None")
+            } else {
+                for(permission: Permission in specialPermissions) {
+                    append(WordUtils.capitalizeFully(permission.name.replace('_', ' ', true)))
+                    append(", ")
+                }
+
+                setLength(length - 2)
+            }
+        }, false)
 
         BotUtils.sendMessage(embed.build(), event.channel)
     }

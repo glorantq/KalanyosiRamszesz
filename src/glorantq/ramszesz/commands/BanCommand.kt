@@ -20,6 +20,8 @@ class BanCommand : ICommand {
         get() = "Ban a user from the server. Mention a user and optionally specify a reason"
     override val usage: String
         get() = "@Mention [Reason]"
+    override val botPermissions: Int
+        get() = 0x4
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val embed: EmbedBuilder = BotUtils.embed("Ban", event.author)

@@ -18,6 +18,8 @@ class ColourCommand : ICommand {
         get() = listOf("rolecolor", "colour", "color")
     override val usage: String
         get() = "<Colour Code> Role"
+    override val botPermissions: Int
+        get() = 268435456
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         if(!BotUtils.hasPermissions(268435456, event.author, event.guild)) {

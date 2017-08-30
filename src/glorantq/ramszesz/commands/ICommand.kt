@@ -22,6 +22,8 @@ interface ICommand {
         get() = false
     val disabled: Boolean
         get() = false
+    val botPermissions: Int
+        get() = 0x0
 
     fun execute(event: MessageReceivedEvent, args: List<String>)
 }

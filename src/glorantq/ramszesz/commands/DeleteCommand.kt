@@ -22,6 +22,8 @@ class DeleteCommand : ICommand {
         get() = listOf("purge")
     override val usage: String
         get() = "[@Mention] Amount"
+    override val botPermissions: Int
+        get() = 8192
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         if(!BotUtils.hasPermissions(8192, event.author, event.guild)) {

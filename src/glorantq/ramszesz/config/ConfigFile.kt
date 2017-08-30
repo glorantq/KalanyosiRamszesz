@@ -46,7 +46,7 @@ class ConfigFile {
         }
 
     @SerializedName("deleteCommands")
-    var deleteCommands: Boolean = true
+    var deleteCommands: Boolean = false
         set(value) {
             field = value
             save()

@@ -37,6 +37,7 @@ class MemeCommand : ICommand {
         memes.add(NumberOneMeme())
         memes.add(ThinkingMeme())
         memes.add(EmojiMovieMeme())
+        memes.add(RainbowMeme())
     }
 
     val logger: Logger = LoggerFactory.getLogger(this::class.java)

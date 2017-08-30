@@ -58,6 +58,13 @@ class ChannelStatsCommand : ICommand {
                 event.message.channelMentions[0]
             }
 
+            var hasPerms: Boolean = false
+            channel.getModifiedPermissions(event.client.ourUser).forEach { if(it.hasPermission(1024)) { hasPerms = true }}
+            if(!hasPerms) {
+                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I'm sorry ${event.author.mention()}, but I don't have permissions to do this!", event.author), event.channel)
+                return@thread
+            }
+
             BotUtils.sendMessage(BotUtils.createSimpleEmbed("Channel Statistics", "Calculating statistics for ${channel.mention()}, this may take a while...", event.author), event.channel)
 
             val messageCounts: HashMap<Long, Int> = HashMap()

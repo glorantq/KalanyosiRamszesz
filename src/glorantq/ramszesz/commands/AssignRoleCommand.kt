@@ -24,6 +24,8 @@ class AssignRoleCommand : ICommand {
         get() = listOf("addrole", "ar", "give")
     override val usage: String
         get() = "@Mention Role[,Role2]"
+    override val botPermissions: Int
+        get() = 268435456
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
         val embed: EmbedBuilder = BotUtils.embed("Assign Roles", event.author)
