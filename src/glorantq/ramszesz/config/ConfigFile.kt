@@ -15,7 +15,7 @@ class ConfigFile {
         private val logger: Logger = LoggerFactory.getLogger("ConfigFile")
 
         fun create(guildId: String): ConfigFile {
-            val configFile: File = File("./config/$guildId.json")
+            val configFile = File("./config/$guildId.json")
             logger.info("Loading file: ${configFile.absolutePath}")
             if(configFile.exists()) {
                 val guildConfig: ConfigFile = Gson().fromJson(configFile.readText(Charset.forName("UTF-8")), ConfigFile::class.java)
@@ -23,7 +23,7 @@ class ConfigFile {
                 logger.info("Config already exists, returning...")
                 return guildConfig
             } else {
-                val guildConfig: ConfigFile = ConfigFile()
+                val guildConfig = ConfigFile()
                 guildConfig.guildId = guildId
                 logger.info("Creating new config...")
 
@@ -80,8 +80,15 @@ class ConfigFile {
             save()
         }
 
+    @SerializedName("statsCalcLimit")
+    var statsCalcLimit: Int = 5000
+        set(value) {
+            field = value
+            save()
+        }
+
     private fun save() {
-        val configFile: File = File("./config/$guildId.json")
+        val configFile = File("./config/$guildId.json")
         val json: String = Gson().toJson(this)
         if(!configFile.parentFile.exists()) configFile.parentFile.mkdirs()
         configFile.createNewFile()

@@ -30,6 +30,7 @@ class ConfigDumpCommand : ICommand {
         embedBuilder.appendField("adminRole", if(config.adminRole != -1L) {event.guild.getRoleByID(config.adminRole).name} else {"Server Owner"}, true)
         embedBuilder.appendField("modLogChannel", if(config.modLogChannel != -1L) {event.guild.getChannelByID(config.modLogChannel).name} else {"None"}, true)
         embedBuilder.appendField("logModerations", config.logModerations.toString(), true)
+        embedBuilder.appendField("statsCalcLimit", config.statsCalcLimit.toString(), true)
 
         BotUtils.sendMessage(embedBuilder.build(), event.channel)
     }

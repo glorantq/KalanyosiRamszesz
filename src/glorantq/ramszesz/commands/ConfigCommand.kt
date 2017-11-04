@@ -29,6 +29,7 @@ class ConfigCommand : ICommand {
         allowedKeys.add("adminRole")
         allowedKeys.add("logModerations")
         allowedKeys.add("modLogChannel")
+        allowedKeys.add("statsCalcLimit")
     }
 
     override fun execute(event: MessageReceivedEvent, args: List<String>) {
@@ -120,6 +121,18 @@ class ConfigCommand : ICommand {
                             config.modLogChannel = channels[0].longID
                             BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `modLogChannel` has been set to ${channels[0].name}", event.author), event.channel)
                             channels[0].sendMessage(BotUtils.createSimpleEmbed("Moderation Logging", "Moderation logging has been bound to this channel", event.author))
+                        }
+                    }
+
+                    "statsCalcLimit" -> {
+                        if(args.isNotEmpty()) {
+                            if(!BotUtils.getSpecialPermissions(event.author).contains(Permission.BOT_OWNER)) {
+                                BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "This limit can only be changed by the bot owner!", event.author), event.channel)
+                                return
+                            }
+                            val calcLimit: Int = args[1].toIntOrNull() ?: 5000
+                            config.statsCalcLimit = calcLimit
+                            BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Config", "The value of `statsCalcLimit` has been set to $calcLimit", event.author), event.channel)
                         }
                     }
                 }

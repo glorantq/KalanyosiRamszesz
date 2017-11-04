@@ -2,6 +2,7 @@ package glorantq.ramszesz
 
 import glorantq.ramszesz.commands.*
 import glorantq.ramszesz.config.ConfigFile
+import glorantq.ramszesz.scripting.SharedScriptContext
 import glorantq.ramszesz.utils.BotUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -10,6 +11,8 @@ import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.handle.impl.events.guild.GuildCreateEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.util.RequestBuffer
+import java.util.*
 import kotlin.concurrent.thread
 
 /**
@@ -43,6 +46,7 @@ class Ramszesz private constructor() {
     )
 
     var updatePlayingText: Boolean = true
+    val scriptingContext: SharedScriptContext = SharedScriptContext()
 
     init {
         logger.info("Starting Kalányosi Ramszesz...")
@@ -74,6 +78,7 @@ class Ramszesz private constructor() {
         commands.add(TestEmbedCommand())
         commands.add(CatCommand())
         commands.add(OsuCommand())
+        commands.add(ExecCommand())
 
         discord.dispatcher.registerListener(this)
         discord.login()

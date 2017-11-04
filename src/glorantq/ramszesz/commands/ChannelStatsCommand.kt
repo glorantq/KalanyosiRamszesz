@@ -1,5 +1,6 @@
 package glorantq.ramszesz.commands
 
+import glorantq.ramszesz.Ramszesz
 import glorantq.ramszesz.utils.BotUtils
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IChannel
@@ -39,7 +40,7 @@ class ChannelStatsCommand : ICommand {
 
             val dateTime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(nextExecute), ZoneId.systemDefault())
             val formatter: DateTimeFormatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG)
-            val diff: Date = Date(nextExecute - System.currentTimeMillis())
+            val diff = Date(nextExecute - System.currentTimeMillis())
             val calendar: Calendar = Calendar.getInstance()
             calendar.time = diff
 
@@ -52,13 +53,14 @@ class ChannelStatsCommand : ICommand {
         }
 
         thread(name = "ChannelStatsCheck-${event.channel.longID}-${System.nanoTime()}", isDaemon = true, start = true) {
+            val calculationLimit: Int = BotUtils.getGuildConfig(event).statsCalcLimit
             val channel: IChannel = if(event.message.channelMentions.isEmpty()) {
                 event.channel
             } else {
                 event.message.channelMentions[0]
             }
 
-            var hasPerms: Boolean = false
+            var hasPerms = false
             channel.getModifiedPermissions(event.client.ourUser).forEach { if(it.hasPermission(1024)) { hasPerms = true }}
             if(!hasPerms) {
                 BotUtils.sendMessage(BotUtils.createSimpleEmbed("Kalányosi Ramszesz", "I'm sorry ${event.author.mention()}, but I don't have permissions to do this!", event.author), event.channel)
@@ -68,7 +70,7 @@ class ChannelStatsCommand : ICommand {
             BotUtils.sendMessage(BotUtils.createSimpleEmbed("Channel Statistics", "Calculating statistics for ${channel.mention()}, this may take a while...", event.author), event.channel)
 
             val messageCounts: HashMap<Long, Int> = HashMap()
-            val history: List<IMessage> = channel.getMessageHistory(5000)
+            val history: List<IMessage> = channel.getMessageHistory(calculationLimit)
 
             history.map { it.author }
                     .forEach {
@@ -84,10 +86,10 @@ class ChannelStatsCommand : ICommand {
             val embed: EmbedBuilder = BotUtils.embed("Channel Statistics", event.author)
             embed.withDescription(
                     "Channel statistics for ${channel.mention()}\n" +
-                    "**${channel.fullMessageHistory.size}** messages, calculation limited to 5000 messages\n" +
+                    "**${channel.fullMessageHistory.size}** messages, calculation limited to $calculationLimit messages\n" +
                     "**${messageCounts.size}** users have talked recently")
 
-            var added: Int = 0
+            var added = 0
             for((key, value) in finalMap) {
                 val user: IUser? = event.guild.getUserByID(key)
                 val username: String = if(user == null) { "Invalid User" } else { user.name }

@@ -86,7 +86,7 @@ class BotStatsCommand : ICommand {
                         contributors.add(Contributor(username, link, additions, deletions))
                     }
 
-                    val sortedContributors: List<Contributor> = contributors.sortedWith(Comparator<Contributor> { o1, o2 -> compareValues(o2.additions, o1.additions) })
+                    val sortedContributors: List<Contributor> = contributors.sortedWith(Comparator { o1, o2 -> compareValues(o2.additions, o1.additions) })
 
                     embed.appendField("Contributors (on GitHub)", buildString {
                         for (contributor: Contributor in sortedContributors) {

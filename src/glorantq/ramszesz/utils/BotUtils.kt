@@ -79,7 +79,7 @@ object BotUtils {
         }
     }
 
-    fun getSpecialPermissions(user: IUser): List<Permission> {
+    fun getSpecialPermissions(user  : IUser): List<Permission> {
         val permissions: ArrayList<Permission> = ArrayList()
 
         if (Ramszesz.instance.squad.contains(user.longID)) {
@@ -98,7 +98,7 @@ object BotUtils {
     }
 
     fun embed(header: String, author: IUser): EmbedBuilder {
-        val builder: EmbedBuilder = EmbedBuilder()
+        val builder = EmbedBuilder()
         builder.withColor(embedColor)
         builder.withAuthorName(header)
         builder.withFooterText("Command ran by @${author.name}")
@@ -114,7 +114,7 @@ object BotUtils {
     fun sendUsageEmbed(extraMessage: String, header: String, author: IUser, event: MessageReceivedEvent, command: ICommand) {
         val embed: EmbedBuilder = embed(header, author)
         embed.withDescription(extraMessage)
-        embed.appendField("Usage", "${prefix}${command.commandName} ${command.usage}", false)
+        embed.appendField("Usage", "$prefix${command.commandName} ${command.usage}", false)
         sendMessage(embed.build(), event.channel)
     }
 

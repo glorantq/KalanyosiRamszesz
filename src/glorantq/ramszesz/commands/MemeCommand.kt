@@ -19,7 +19,7 @@ class MemeCommand : ICommand {
     override val description: String
         get() = "Generate memes in Discord"
     override val permission: Permission
-        get() = Permission.SQUAD
+        get() = Permission.USER
     override val extendedHelp: String
         get() = "Generate memes in Discord."
     override val aliases: List<String>
@@ -38,6 +38,8 @@ class MemeCommand : ICommand {
         memes.add(ThinkingMeme())
         memes.add(EmojiMovieMeme())
         memes.add(RainbowMeme())
+        memes.add(OpenCVDemo())
+        memes.add(LensflareMeme())
     }
 
     val logger: Logger = LoggerFactory.getLogger(this::class.java)
@@ -68,7 +70,7 @@ class MemeCommand : ICommand {
                         BotUtils.sendUsageEmbed("This meme requires fewer arguments!", "Meme", event.author, event, this)
                         return
                     } else {
-                        for(i: Int in 1..memeArgs.size - 1) {
+                        for(i: Int in 1 until memeArgs.size) {
                             when(meme.parameters[i - 1].type) {
                                 MemeParameter.Companion.Type.STRING -> {
                                     setParam(i - 1, meme, memeArgs[i])

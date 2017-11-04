@@ -103,7 +103,7 @@ class OsuCommand : ICommand {
 
                     val events: JSONArray = user["events"] as JSONArray
                     if(events.isNotEmpty()) {
-                        val eventBuilder: StringBuilder = StringBuilder()
+                        val eventBuilder = StringBuilder()
                         for(osuEvent: Any? in events) {
                             osuEvent as JSONObject
                             var title: String = osuEvent["display_html"].toString()
@@ -117,6 +117,10 @@ class OsuCommand : ICommand {
 
                             title = Remark().convert(title)
                             title = title.replace("\\_", "_")
+
+                            if(eventBuilder.length + title.length > 1024) {
+                                break
+                            }
 
                             eventBuilder.append(title)
                             eventBuilder.append("\n")
