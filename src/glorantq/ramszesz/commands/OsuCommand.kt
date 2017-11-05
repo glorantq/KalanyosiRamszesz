@@ -64,7 +64,7 @@ class OsuCommand : ICommand {
                 }
 
                 override fun onResponse(p0: Call, p1: Response) {
-                    val rawJson: String = p1.body().string()
+                    val rawJson: String = p1.body()!!.string()
 
                     val root: Any = JSONParser().parse(rawJson)
                     if (root is JSONObject) {

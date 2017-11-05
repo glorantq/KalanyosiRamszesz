@@ -26,7 +26,7 @@ class CatCommand : ICommand {
             }
 
             override fun onResponse(p0: Call?, p1: Response?) {
-                val json: String = p1!!.body().string() ?: ""
+                val json: String = p1!!.body()!!.string() ?: ""
                 if (json.isEmpty()) {
                     BotUtils.sendMessage(BotUtils.createSimpleEmbed("Random Cat", "Failed to reach the kittens.", event.author), event.channel)
                     return

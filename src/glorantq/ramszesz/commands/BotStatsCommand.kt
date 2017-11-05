@@ -39,7 +39,7 @@ class BotStatsCommand : ICommand {
 
             override fun onResponse(p0: Call?, p1: Response?) {
                 try {
-                    val json: String = p1!!.body().string() ?: ""
+                    val json: String = p1!!.body()!!.string() ?: ""
                     if (json.isEmpty()) {
                         BotUtils.sendMessage(BotUtils.createSimpleEmbed("Bot Statistics", "Failed to contact GitHub API", event.author), event.channel)
                         return

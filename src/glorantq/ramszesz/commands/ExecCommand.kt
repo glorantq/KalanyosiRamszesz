@@ -32,7 +32,7 @@ class ExecCommand : ICommand {
                     val url = URL(attachment.url)
                     val request: Request = Request.Builder().url(url).get().build()
                     val response: Response = OkHttpClient.Builder().build().newCall(request).execute()
-                    rawCode = response.body().string()
+                    rawCode = response.body()!!.string()
                 } catch (e: Exception) {
                     BotUtils.sendMessage(BotUtils.createSimpleEmbed("Script Execution", "Failed to process attachment!", event.author), event.channel)
                     return

@@ -1,14 +1,15 @@
 package glorantq.ramszesz.commands
 
+import com.github.salomonbrys.kotson.fromJson
+import com.google.gson.Gson
 import glorantq.ramszesz.utils.BotUtils
 import glorantq.ramszesz.utils.DictionaryResult
+import glorantq.ramszesz.utils.tryParseInt
 import okhttp3.*
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
-import java.io.IOException
-import com.github.salomonbrys.kotson.*
-import com.google.gson.Gson
-import glorantq.ramszesz.utils.tryParseInt
+import sx.blah.discord.handle.obj.IVoiceChannel
 import sx.blah.discord.util.EmbedBuilder
+import java.io.IOException
 
 /**
  * Created by glora on 2017. 07. 28..
@@ -62,7 +63,7 @@ class DictionaryCommand : ICommand {
                     BotUtils.sendMessage(BotUtils.createSimpleEmbed("Dictionary", "Failed to look up `${args[0]}` in the dictionary because @glorantq can't code!", event.author), event.channel)
                     return
                 }
-                val results: List<DictionaryResult> = Gson().fromJson<List<DictionaryResult>>(p1.body().string())
+                val results: List<DictionaryResult> = Gson().fromJson(p1.body()!!.string())
 
                 val embed: EmbedBuilder = BotUtils.embed("Dictionary", event.author)
                 embed.withDescription("Definitions for \"${args[0]}\"")
